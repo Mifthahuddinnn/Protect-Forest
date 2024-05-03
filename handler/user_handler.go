@@ -14,7 +14,13 @@ type UserHandler struct {
 	UserUseCase usecases.UserUseCase
 }
 
-func (h *UserHandler) GetUsers(c echo.Context) error {
+type RegisterUserResponse struct {
+	Status  string         `json:"status"`
+	Message string         `json:"message"`
+	Data    *entities.User `json:"data"`
+}
+
+func (h UserHandler) GetUsers(c echo.Context) error {
 	users, err := h.UserUseCase.GetUsers()
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
@@ -25,7 +31,7 @@ func (h *UserHandler) GetUsers(c echo.Context) error {
 	return c.JSON(http.StatusOK, users)
 }
 
-func (h *UserHandler) GetUserByID(c echo.Context) error {
+func (h UserHandler) GetUserByID(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -43,33 +49,37 @@ func (h *UserHandler) GetUserByID(c echo.Context) error {
 	return c.JSON(http.StatusOK, user)
 }
 
-func (h *UserHandler) RegisterUser(c echo.Context) error {
+func (h UserHandler) RegisterUser(c echo.Context) error {
 	user := &entities.User{}
 	if err := c.Bind(user); err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "Invalid request",
-			"status":  "400",
+		return c.JSON(http.StatusBadRequest, RegisterUserResponse{
+			Message: "Invalid request",
+			Status:  "400",
 		})
 	}
 
 	createdUser, err := h.UserUseCase.RegisterUser(*user)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"message": "Failed to create user",
-			"status":  "500",
-			"error":   err.Error(),
+		if err.Error() == "email already exists" {
+			return c.JSON(http.StatusBadRequest, RegisterUserResponse{
+				Message: "Email already taken",
+				Status:  "400",
+			})
+		}
+		return c.JSON(http.StatusInternalServerError, RegisterUserResponse{
+			Message: err.Error(),
+			Status:  "500",
 		})
 	}
 
-	return c.JSON(http.StatusCreated, map[string]interface{}{
-		"message": "User created successfully",
-		"status":  "200",
-		"data":    createdUser,
+	return c.JSON(http.StatusCreated, RegisterUserResponse{
+		Status:  "200",
+		Message: "Register successfully",
+		Data:    &createdUser,
 	})
-
 }
 
-func (h *UserHandler) LoginUser(c echo.Context) error {
+func (h UserHandler) LoginUser(c echo.Context) error {
 	loginUser := &entities.User{}
 	if err := c.Bind(loginUser); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
