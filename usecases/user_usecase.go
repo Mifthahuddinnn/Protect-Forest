@@ -23,6 +23,10 @@ func (u UserUseCase) RegisterUser(user entities.User) (entities.User, error) {
 		return entities.User{}, errors.New("email and password are required")
 	}
 
+	if len(user.Password) < 6 {
+		return entities.User{}, errors.New("password must be at least 6 characters")
+	}
+
 	existingUser, err := u.Repo.GetUserByEmail(user.Email)
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return entities.User{}, err

@@ -33,15 +33,19 @@ func main() {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}
 
+	// User
 	userRepo := user.Repository{DB: db}
 	userUseCase := usecases.UserUseCase{Repo: userRepo}
 	useHandler := handler.UserHandler{UserUseCase: userUseCase}
 
 	e := echo.New()
+
+	// Register Login
 	e.GET("/users", useHandler.GetUsers)
 	e.GET("/users/:id", useHandler.GetUserByID)
 	e.POST("/users/register", useHandler.RegisterUser)
 	e.POST("/users/login", useHandler.LoginUser)
+
 	e.Logger.Fatal(e.Start(":8000"))
 
 }
