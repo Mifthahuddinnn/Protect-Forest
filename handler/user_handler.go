@@ -66,6 +66,24 @@ func (h UserHandler) RegisterUser(c echo.Context) error {
 				Status:  "400",
 			})
 		}
+		if err.Error() == "email and password are required" {
+			return c.JSON(http.StatusBadRequest, RegisterUserResponse{
+				Message: "Email and password are required",
+				Status:  "400",
+			})
+		}
+		if err.Error() == "password must be at least 6 characters" {
+			return c.JSON(http.StatusBadRequest, RegisterUserResponse{
+				Message: "Password must be at least 6 characters",
+				Status:  "400",
+			})
+		}
+		if err.Error() == "email is invalid" {
+			return c.JSON(http.StatusBadRequest, RegisterUserResponse{
+				Message: "Email is invalid",
+				Status:  "400",
+			})
+		}
 		return c.JSON(http.StatusInternalServerError, RegisterUserResponse{
 			Message: err.Error(),
 			Status:  "500",
@@ -73,7 +91,7 @@ func (h UserHandler) RegisterUser(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusCreated, RegisterUserResponse{
-		Status:  "200",
+		Status:  "201",
 		Message: "Register successfully",
 		Data:    &createdUser,
 	})

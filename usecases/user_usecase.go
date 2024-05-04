@@ -4,6 +4,7 @@ import (
 	"errors"
 	"forest/entities"
 	"gorm.io/gorm"
+	"strings"
 )
 
 type Repository interface {
@@ -21,6 +22,10 @@ type UserUseCase struct {
 func (u UserUseCase) RegisterUser(user entities.User) (entities.User, error) {
 	if user.Email == "" || user.Password == "" {
 		return entities.User{}, errors.New("email and password are required")
+	}
+
+	if !strings.Contains(user.Email, "@") {
+		return entities.User{}, errors.New("email is invalid")
 	}
 
 	if len(user.Password) < 6 {
