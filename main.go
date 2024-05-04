@@ -1,50 +1,41 @@
 package main
 
 import (
-	"fmt"
+	"forest/drivers/database"
 	"forest/handler"
-	"forest/repositories/user"
+	"forest/repositories"
 	"forest/usecases"
-	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
 	"log"
-	"os"
 )
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatalf("Error loading .env file: %v", err)
-	}
-
-	dbHost := os.Getenv("DB_HOST")
-	dbPort := os.Getenv("DB_PORT")
-	dbUser := os.Getenv("DB_USER")
-	dbPass := os.Getenv("DB_PASS")
-	dbDatabase := os.Getenv("DB_NAME")
-
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
-		dbUser, dbPass, dbHost, dbPort, dbDatabase)
-
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	db, err := database.Connect()
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}
 
 	// User
-	userRepo := user.Repository{DB: db}
+	userRepo := repositories.Repository{DB: db}
 	userUseCase := usecases.UserUseCase{Repo: userRepo}
 	useHandler := handler.UserHandler{UserUseCase: userUseCase}
 
+	// Admin
+	adminRepo := repositories.RepositoryAdmin{DB: db}
+	adminUseCase := usecases.AdminUseCase{Repo: adminRepo}
+	adminHandler := handler.AdminHandler{AdminUseCase: adminUseCase}
+
 	e := echo.New()
 
-	// Register Login
+	// Register Login User
 	e.GET("/users", useHandler.GetUsers)
 	e.GET("/users/:id", useHandler.GetUserByID)
 	e.POST("/users/register", useHandler.RegisterUser)
 	e.POST("/users/login", useHandler.LoginUser)
+
+	// Register Login Admin
+	e.POST("/admin/register", adminHandler.RegisterAdmin)
+	e.POST("/admin/login", adminHandler.LoginAdmin)
 
 	e.Logger.Fatal(e.Start(":8000"))
 

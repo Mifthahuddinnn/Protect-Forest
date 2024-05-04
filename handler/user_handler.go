@@ -3,11 +3,10 @@ package handler
 import (
 	"forest/entities"
 	"forest/usecases"
-	"github.com/golang-jwt/jwt"
+	"forest/utils"
 	"github.com/labstack/echo/v4"
 	"net/http"
 	"strconv"
-	"time"
 )
 
 type UserHandler struct {
@@ -58,7 +57,7 @@ func (h UserHandler) RegisterUser(c echo.Context) error {
 		})
 	}
 
-	createdUser, err := h.UserUseCase.RegisterUser(*user)
+	createdUser, err := h.UserUseCase.RegisterUser(user)
 	if err != nil {
 		if err.Error() == "email already exists" {
 			return c.JSON(http.StatusBadRequest, RegisterUserResponse{
@@ -93,7 +92,7 @@ func (h UserHandler) RegisterUser(c echo.Context) error {
 	return c.JSON(http.StatusCreated, RegisterUserResponse{
 		Status:  "201",
 		Message: "Register successfully",
-		Data:    &createdUser,
+		Data:    createdUser,
 	})
 }
 
@@ -114,7 +113,7 @@ func (h UserHandler) LoginUser(c echo.Context) error {
 		})
 	}
 
-	token, err := createToken(user.ID)
+	token, err := utils.CreateToken(user.ID)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"message": "Failed to create token",
@@ -128,13 +127,4 @@ func (h UserHandler) LoginUser(c echo.Context) error {
 		"status":  "200",
 		"data":    token,
 	})
-}
-
-func createToken(userID int) (string, error) {
-	claims := jwt.MapClaims{}
-	claims["authorized"] = true
-	claims["user_id"] = userID
-	claims["exp"] = time.Now().Add(time.Hour * 1).Unix()
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString([]byte("secret"))
 }

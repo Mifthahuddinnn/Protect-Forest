@@ -1,4 +1,4 @@
-package user
+package repositories
 
 import (
 	"forest/entities"
@@ -10,16 +10,16 @@ type Repository struct {
 	DB *gorm.DB
 }
 
-func (repo Repository) GetUsers() ([]entities.User, error) {
-	var users []entities.User
+func (repo Repository) GetUsers() ([]*entities.User, error) {
+	var users []*entities.User
 	result := repo.DB.Find(&users)
 	return users, result.Error
 }
 
-func (repo Repository) GetUserByID(id int) (entities.User, error) {
+func (repo Repository) GetUserByID(id int) (*entities.User, error) {
 	var user entities.User
 	result := repo.DB.Where("id = ?", id).First(&user)
-	return user, result.Error
+	return &user, result.Error
 }
 
 func (repo Repository) UpdateUser(user *entities.User) (*entities.User, error) {
@@ -27,10 +27,10 @@ func (repo Repository) UpdateUser(user *entities.User) (*entities.User, error) {
 	return user, result.Error
 }
 
-func (repo Repository) GetUserByEmail(email string) (entities.User, error) {
+func (repo Repository) GetUserByEmail(email string) (*entities.User, error) {
 	var user entities.User
 	result := repo.DB.Where("email = ?", email).First(&user)
-	return user, result.Error
+	return &user, result.Error
 }
 
 func (repo Repository) DeleteUser(id int) error {
@@ -38,21 +38,21 @@ func (repo Repository) DeleteUser(id int) error {
 	return result.Error
 }
 
-func (repo Repository) LoginUser(email, password string) (entities.User, error) {
+func (repo Repository) LoginUser(email, password string) (*entities.User, error) {
 	var user entities.User
 	result := repo.DB.Where("email = ?", email).First(&user)
 	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)); err != nil {
-		return entities.User{}, err
+		return nil, err
 	}
-	return user, result.Error
+	return &user, result.Error
 }
 
-func (repo Repository) RegisterUser(user entities.User) (entities.User, error) {
+func (repo Repository) RegisterUser(user *entities.User) (*entities.User, error) {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	if err != nil {
-		return entities.User{}, err
+		return nil, err
 	}
 	user.Password = string(hashedPassword)
-	result := repo.DB.Create(&user)
+	result := repo.DB.Create(user)
 	return user, result.Error
 }
