@@ -2,6 +2,7 @@ package handler
 
 import (
 	"forest/entities"
+	"forest/handler/base"
 	"forest/usecases"
 	"forest/utils"
 	"github.com/labstack/echo/v4"
@@ -59,41 +60,10 @@ func (h UserHandler) RegisterUser(c echo.Context) error {
 
 	createdUser, err := h.UserUseCase.RegisterUser(user)
 	if err != nil {
-		if err.Error() == "email already exists" {
-			return c.JSON(http.StatusBadRequest, RegisterUserResponse{
-				Message: "Email already taken",
-				Status:  "400",
-			})
-		}
-		if err.Error() == "email and password are required" {
-			return c.JSON(http.StatusBadRequest, RegisterUserResponse{
-				Message: "Email and password are required",
-				Status:  "400",
-			})
-		}
-		if err.Error() == "password must be at least 6 characters" {
-			return c.JSON(http.StatusBadRequest, RegisterUserResponse{
-				Message: "Password must be at least 6 characters",
-				Status:  "400",
-			})
-		}
-		if err.Error() == "email is invalid" {
-			return c.JSON(http.StatusBadRequest, RegisterUserResponse{
-				Message: "Email is invalid",
-				Status:  "400",
-			})
-		}
-		return c.JSON(http.StatusInternalServerError, RegisterUserResponse{
-			Message: err.Error(),
-			Status:  "500",
-		})
+		return c.JSON(utils.ConvertResponseCode(err), base.NewErrResponse(err.Error()))
 	}
 
-	return c.JSON(http.StatusCreated, RegisterUserResponse{
-		Status:  "201",
-		Message: "Register successfully",
-		Data:    createdUser,
-	})
+	return c.JSON(http.StatusOK, base.NewSuccessResponse("User registered successfully", createdUser))
 }
 
 func (h UserHandler) LoginUser(c echo.Context) error {
@@ -115,16 +85,8 @@ func (h UserHandler) LoginUser(c echo.Context) error {
 
 	token, err := utils.CreateToken(user.ID)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"message": "Failed to create token",
-			"status":  "500",
-			"error":   err.Error(),
-		})
+		return c.JSON(utils.ConvertResponseCode(err), base.NewErrResponse(err.Error()))
 	}
 
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message": "Logged in successfully",
-		"status":  "200",
-		"data":    token,
-	})
+	return c.JSON(http.StatusOK, base.NewLoginResponse("Login success", token))
 }
