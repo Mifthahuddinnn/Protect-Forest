@@ -16,6 +16,10 @@ type AdminUseCase struct {
 	Repo RepoAdmin
 }
 
+type AdminToken interface {
+	CreateToken(userID int) (string, error)
+}
+
 func (a AdminUseCase) RegisterAdmin(admin *entities.Admin) (*entities.Admin, error) {
 	if admin.Username == "" || admin.Password == "" {
 		return nil, errors.New("username and password are required")

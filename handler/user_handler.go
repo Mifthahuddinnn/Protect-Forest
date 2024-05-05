@@ -3,7 +3,6 @@ package handler
 import (
 	"forest/entities"
 	"forest/usecases"
-	"forest/utils"
 	"github.com/labstack/echo/v4"
 	"net/http"
 	"strconv"
@@ -11,6 +10,7 @@ import (
 
 type UserHandler struct {
 	UserUseCase usecases.UserUseCase
+	TokenUser   usecases.TokenUser
 }
 
 type RegisterUserResponse struct {
@@ -113,7 +113,7 @@ func (h UserHandler) LoginUser(c echo.Context) error {
 		})
 	}
 
-	token, err := utils.CreateToken(user.ID)
+	token, err := h.TokenUser.CreateToken(user.ID)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"message": "Failed to create token",
