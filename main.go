@@ -5,20 +5,14 @@ import (
 	"forest/handler"
 	"forest/repositories"
 	"forest/usecases"
-	"forest/utils"
 	"github.com/labstack/echo/v4"
 	"log"
 )
 
 func main() {
-	// Load Env
-	utils.LoadEnv()
-
-	// Init DB
-	config := utils.InitConfigMysql()
-	db, err := database.ConnectDB(config)
+	db, err := database.Connect()
 	if err != nil {
-		log.Fatalf("Error connecting to the database: %v", err)
+		log.Fatalf("Failed to connect to database: %v", err)
 	}
 
 	// User

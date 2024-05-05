@@ -8,7 +8,7 @@ import (
 type JwtToken struct {
 }
 
-func (JwtToken) CreateToken(userID int) (string, error) {
+func CreateToken(userID int) (string, error) {
 	claims := jwt.MapClaims{}
 	claims["authorized"] = true
 	claims["user_id"] = userID

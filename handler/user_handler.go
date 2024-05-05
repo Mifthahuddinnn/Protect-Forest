@@ -4,6 +4,7 @@ import (
 	"forest/entities"
 	"forest/handler/base"
 	"forest/usecases"
+	"forest/utils"
 	"github.com/labstack/echo/v4"
 	"net/http"
 	"strconv"
@@ -11,7 +12,6 @@ import (
 
 type UserHandler struct {
 	UserUseCase usecases.UserUseCase
-	TokenUser   usecases.TokenUser
 }
 
 type RegisterUserResponse struct {
@@ -83,7 +83,7 @@ func (h UserHandler) LoginUser(c echo.Context) error {
 		})
 	}
 
-	token, err := h.TokenUser.CreateToken(user.ID)
+	token, err := utils.CreateToken(user.ID)
 	if err != nil {
 		return c.JSON(utils.ConvertResponseCode(err), base.NewErrResponse(err.Error()))
 	}
