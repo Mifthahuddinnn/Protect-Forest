@@ -2,6 +2,7 @@ package database
 
 import (
 	"fmt"
+	"forest/entities"
 	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -28,6 +29,7 @@ func Connect() (*gorm.DB, error) {
 	if err != nil {
 		return nil, err
 	}
+	db.AutoMigrate(entities.User{}, entities.Reporting{}, entities.Redeem{}, entities.Admin{})
 
 	return db, nil
 }

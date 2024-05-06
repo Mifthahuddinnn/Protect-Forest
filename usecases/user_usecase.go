@@ -14,6 +14,7 @@ type RepoUser interface {
 	GetUserByID(id int) (*entities.User, error)
 	GetUsers() ([]*entities.User, error)
 	GetUserByEmail(email string) (*entities.User, error)
+	UpdateUserPoints(id int, points int) (*entities.User, error)
 }
 
 type UserUseCase struct {
@@ -51,6 +52,14 @@ func (u *UserUseCase) RegisterUser(user *entities.User) (*entities.User, error) 
 
 func (u *UserUseCase) LoginUser(email, password string) (*entities.User, error) {
 	return u.Repo.LoginUser(email, password)
+}
+
+func (u *UserUseCase) UpdateUserPoints(id int, points int) (*entities.User, error) {
+	updatedUser, err := u.Repo.UpdateUserPoints(id, points)
+	if err != nil {
+		return nil, err
+	}
+	return updatedUser, nil
 }
 
 func (u *UserUseCase) GetUserByID(id int) (*entities.User, error) {

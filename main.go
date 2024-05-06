@@ -25,6 +25,11 @@ func main() {
 	adminUseCase := usecases.AdminUseCase{Repo: adminRepo}
 	adminHandler := handler.AdminHandler{AdminUseCase: adminUseCase}
 
+	// Report
+	//reportRepo := repositories.RepoReport{DB: db}
+	//reportUseCase := usecases.ReportUseCase{Repo: &reportRepo}
+	//reportHandler := handler.ReportHandler{ReportUseCase: reportUseCase}
+
 	e := echo.New()
 
 	// Register Login User
@@ -32,6 +37,9 @@ func main() {
 	e.GET("/users/:id", useHandler.GetUserByID)
 	e.POST("/users/register", useHandler.RegisterUser)
 	e.POST("/users/login", useHandler.LoginUser)
+
+	// Report User
+	e.POST("/users/update", useHandler.UpdateUser)
 
 	// Register Login Admin
 	e.POST("/admin/register", adminHandler.RegisterAdmin)

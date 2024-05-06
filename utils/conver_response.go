@@ -21,6 +21,8 @@ func ConvertResponseCode(err error) int {
 		return http.StatusNotFound
 	case constant.ErrorUnauthorized:
 		return http.StatusUnauthorized
+	case constant.ErrorInvalidInput:
+		return http.StatusBadRequest
 	default:
 		return http.StatusInternalServerError
 	}
