@@ -1,4 +1,4 @@
-package usecases
+package admin
 
 import (
 	"errors"
@@ -7,16 +7,16 @@ import (
 )
 
 type RepoAdmin interface {
-	RegisterAdmin(*entities.Admin) (*entities.Admin, error)
+	RegisterAdmin(admin *entities.Admin) (*entities.Admin, error)
 	LoginAdmin(username, password string) (*entities.Admin, error)
 	GetAdminUsername(username string) (*entities.Admin, error)
 }
 
-type AdminUseCase struct {
+type UseCaseAdmin struct {
 	Repo RepoAdmin
 }
 
-func (a AdminUseCase) RegisterAdmin(admin *entities.Admin) (*entities.Admin, error) {
+func (a UseCaseAdmin) RegisterAdmin(admin *entities.Admin) (*entities.Admin, error) {
 	if admin.Username == "" || admin.Password == "" {
 		return nil, errors.New("username and password are required")
 	}
@@ -30,6 +30,6 @@ func (a AdminUseCase) RegisterAdmin(admin *entities.Admin) (*entities.Admin, err
 	return a.Repo.RegisterAdmin(admin)
 }
 
-func (a AdminUseCase) LoginAdmin(username, password string) (*entities.Admin, error) {
+func (a UseCaseAdmin) LoginAdmin(username, password string) (*entities.Admin, error) {
 	return a.Repo.LoginAdmin(username, password)
 }

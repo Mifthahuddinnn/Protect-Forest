@@ -12,3 +12,7 @@ type UserDB struct {
 	UpdatedAt time.Time `gorm:"autoUpdateTime"`
 	DeletedAt *time.Time
 }
+
+func (u *UserDB) User() string {
+	return "users"
+}

@@ -1,6 +1,6 @@
-package entities
+package admin
 
-type Admin struct {
+type AdminDB struct {
 	ID       int
 	Username string
 	Password string
