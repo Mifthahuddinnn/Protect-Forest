@@ -2,6 +2,7 @@ package usecases
 
 import (
 	"errors"
+	"forest/constant"
 	"forest/entities"
 	"gorm.io/gorm"
 	"strings"
@@ -20,16 +21,16 @@ type UserUseCase struct {
 }
 
 func (u *UserUseCase) RegisterUser(user *entities.User) (*entities.User, error) {
-	if user.Email == "" || user.Password == "" {
-		return nil, errors.New("email and password are required")
+	if user.Email == "" || user.Password == "" || user.Name == "" {
+		return nil, constant.ErrorEmptyInput
 	}
 
 	if !strings.Contains(user.Email, "@") {
-		return nil, errors.New("email is invalid")
+		return nil, constant.ErrorEmailInvalid
 	}
 
 	if len(user.Password) < 6 {
-		return nil, errors.New("password must be at least 6 characters")
+		return nil, constant.ErrorPassword
 	}
 
 	existingUser, err := u.Repo.GetUserByEmail(user.Email)
@@ -38,7 +39,7 @@ func (u *UserUseCase) RegisterUser(user *entities.User) (*entities.User, error) 
 	}
 
 	if existingUser.Email != "" {
-		return nil, errors.New("email already exists")
+		return nil, constant.ErrorEmailExists
 	}
 
 	return u.Repo.RegisterUser(user)
