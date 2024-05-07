@@ -1,12 +1,17 @@
 package entities
 
+import "time"
+
 type Reporting struct {
-	ID          int    `json:"id" form:"id" gorm:"primaryKey"`
-	UserID      int    `gorm:"not null"`
-	User        User   `gorm:"foreignKey:UserID"`
-	AdminID     int    `gorm:"not null"`
-	Admin       Admin  `gorm:"foreignKey:AdminID"`
-	Status      string `json:"status" form:"status"`
-	Photo       string `json:"photo" form:"photo"`
-	Description string `json:"description" form:"description"`
+	ID          int
+	UserID      int
+	User        User
+	AdminID     int
+	Admin       Admin
+	Status      string
+	Photo       string
+	Description string
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
+	DeletedAt   *time.Time
 }

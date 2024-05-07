@@ -3,8 +3,14 @@ package main
 import (
 	"forest/drivers/database"
 	"forest/handler"
-	"forest/repositories"
-	"forest/usecases"
+	admin3 "forest/handler/admin"
+	"forest/middleware"
+	admin2 "forest/repositories/admin"
+	report2 "forest/repositories/report"
+	user2 "forest/repositories/user"
+	"forest/usecases/admin"
+	"forest/usecases/report"
+	"forest/usecases/user"
 	"github.com/labstack/echo/v4"
 	"log"
 )
@@ -16,19 +22,19 @@ func main() {
 	}
 
 	// User
-	userRepo := repositories.UserRepository{DB: db}
-	userUseCase := usecases.UserUseCase{Repo: userRepo}
+	userRepo := user2.Repository{DB: db}
+	userUseCase := user.UserUseCase{Repo: userRepo}
 	useHandler := handler.UserHandler{UserUseCase: userUseCase}
 
 	// Admin
-	adminRepo := repositories.RepositoryAdmin{DB: db}
-	adminUseCase := usecases.AdminUseCase{Repo: adminRepo}
-	adminHandler := handler.AdminHandler{AdminUseCase: adminUseCase}
+	adminRepo := admin2.RepositoryAdmin{DB: db}
+	adminUseCase := admin.UseCaseAdmin{Repo: adminRepo}
+	adminHandler := admin3.AdminHandler{AdminUseCase: adminUseCase}
 
-	// Report
-	//reportRepo := repositories.RepoReport{DB: db}
-	//reportUseCase := usecases.ReportUseCase{Repo: &reportRepo}
-	//reportHandler := handler.ReportHandler{ReportUseCase: reportUseCase}
+	// Reporting
+	reportRepo := report2.RepositoryReport{DB: db}
+	reportUseCase := report.UseCaseReport{Repo: reportRepo}
+	reportHandler := handler.ReportHandler{ReportUseCase: reportUseCase}
 
 	e := echo.New()
 
@@ -38,8 +44,11 @@ func main() {
 	e.POST("/users/register", useHandler.RegisterUser)
 	e.POST("/users/login", useHandler.LoginUser)
 
-	// Report User
-	e.POST("/users/update", useHandler.UpdateUser)
+	r := e.Group("")
+	r.Use(middleware.JWTMiddleware)
+
+	// Reporting
+	r.POST("/report", reportHandler.CreateReport)
 
 	// Register Login Admin
 	e.POST("/admin/register", adminHandler.RegisterAdmin)

@@ -1,15 +1,15 @@
-package handler
+package admin
 
 import (
 	"forest/entities"
-	"forest/usecases"
+	"forest/usecases/admin"
+	"forest/utils"
 	"github.com/labstack/echo/v4"
 	"net/http"
 )
 
 type AdminHandler struct {
-	AdminUseCase usecases.AdminUseCase
-	usecases.AdminToken
+	AdminUseCase admin.UseCaseAdmin
 }
 
 func (ah AdminHandler) RegisterAdmin(c echo.Context) error {
@@ -37,7 +37,7 @@ func (ah AdminHandler) RegisterAdmin(c echo.Context) error {
 }
 
 func (ah AdminHandler) LoginAdmin(c echo.Context) error {
-	loginAdmin := &entities.Admin{}
+	loginAdmin := &admin.AdminDB{}
 	if err := c.Bind(loginAdmin); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": "Invalid request",
@@ -52,7 +52,7 @@ func (ah AdminHandler) LoginAdmin(c echo.Context) error {
 		})
 
 	}
-	token, err := ah.AdminToken.CreateToken(admin.ID)
+	token, err := utils.CreateToken(admin.ID)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"message": "Failed to create token",

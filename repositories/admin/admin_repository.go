@@ -1,4 +1,4 @@
-package repositories
+package admin
 
 import (
 	"forest/entities"
