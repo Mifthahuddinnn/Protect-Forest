@@ -3,13 +3,12 @@ package main
 import (
 	"forest/drivers/database"
 	"forest/handler"
-	admin3 "forest/handler/admin"
 	"forest/middleware"
 	admin2 "forest/repositories/admin"
-	report2 "forest/repositories/report"
+	"forest/repositories/report"
 	user2 "forest/repositories/user"
 	"forest/usecases/admin"
-	"forest/usecases/report"
+	report2 "forest/usecases/report"
 	"forest/usecases/user"
 	"github.com/labstack/echo/v4"
 	"log"
@@ -27,13 +26,13 @@ func main() {
 	useHandler := handler.UserHandler{UserUseCase: userUseCase}
 
 	// Admin
-	adminRepo := admin2.RepositoryAdmin{DB: db}
+	adminRepo := admin2.Repository{DB: db}
 	adminUseCase := admin.UseCaseAdmin{Repo: adminRepo}
-	adminHandler := admin3.AdminHandler{AdminUseCase: adminUseCase}
+	adminHandler := handler.AdminHandler{AdminUseCase: adminUseCase}
 
-	// Reporting
-	reportRepo := report2.RepositoryReport{DB: db}
-	reportUseCase := report.UseCaseReport{Repo: reportRepo}
+	// Report
+	reportRepo := report.Repository{DB: db}
+	reportUseCase := report2.ReportUseCase{Repo: reportRepo}
 	reportHandler := handler.ReportHandler{ReportUseCase: reportUseCase}
 
 	e := echo.New()
@@ -48,7 +47,7 @@ func main() {
 	r.Use(middleware.JWTMiddleware)
 
 	// Reporting
-	r.POST("/report", reportHandler.CreateReport)
+	r.POST("/reports", reportHandler.CreateReport)
 
 	// Register Login Admin
 	e.POST("/admin/register", adminHandler.RegisterAdmin)

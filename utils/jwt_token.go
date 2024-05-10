@@ -5,6 +5,9 @@ import (
 	"time"
 )
 
+type JwtToken struct {
+}
+
 func CreateToken(userID int) (string, error) {
 	claims := jwt.MapClaims{}
 	claims["authorized"] = true

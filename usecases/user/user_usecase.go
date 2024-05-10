@@ -14,6 +14,7 @@ type Repository interface {
 	GetUserByID(id int) (*entities.User, error)
 	GetUsers() ([]*entities.User, error)
 	GetUserByEmail(email string) (*entities.User, error)
+	UpdateUser(*entities.User) error
 }
 
 type UserUseCase struct {

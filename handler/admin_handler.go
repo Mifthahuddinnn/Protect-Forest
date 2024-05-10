@@ -1,4 +1,4 @@
-package admin
+package handler
 
 import (
 	"forest/entities"
@@ -37,7 +37,7 @@ func (ah AdminHandler) RegisterAdmin(c echo.Context) error {
 }
 
 func (ah AdminHandler) LoginAdmin(c echo.Context) error {
-	loginAdmin := &admin.AdminDB{}
+	loginAdmin := &entities.Admin{}
 	if err := c.Bind(loginAdmin); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": "Invalid request",
