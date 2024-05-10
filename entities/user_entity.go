@@ -5,11 +5,12 @@ import (
 )
 
 type User struct {
-	ID        int    `json:"id"`
+	ID        int    `gorm:"primaryKey"`
 	Name      string `json:"name" form:"name"`
 	Email     string `json:"email" form:"email"`
 	Password  string `json:"password"form:"password"`
 	Address   string `json:"address" form:"address"`
+	Points    int    `json:"points"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt *time.Time

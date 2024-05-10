@@ -22,11 +22,6 @@ func (repo Repository) GetUserByID(id int) (*entities.User, error) {
 	return &user, result.Error
 }
 
-func (repo Repository) UpdateUser(user *entities.User) (*entities.User, error) {
-	result := repo.DB.Model(&entities.User{}).Where("id = ?", user.ID).Updates(user)
-	return user, result.Error
-}
-
 func (repo Repository) GetUserByEmail(email string) (*entities.User, error) {
 	var user entities.User
 	result := repo.DB.Where("email = ?", email).First(&user)
@@ -55,4 +50,14 @@ func (repo Repository) RegisterUser(user *entities.User) (*entities.User, error)
 	user.Password = string(hashedPassword)
 	result := repo.DB.Create(user)
 	return user, result.Error
+}
+
+func (repo Repository) UpdateUser(user *entities.User) error {
+	return repo.DB.Save(user).Error
+}
+
+func (repo Repository) FindUserByID(id uint) (*entities.User, error) {
+	var user entities.User
+	result := repo.DB.Where("id = ?", id).Find(&user)
+	return &user, result.Error
 }
