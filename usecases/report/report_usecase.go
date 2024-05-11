@@ -1,9 +1,13 @@
 package report
 
-import "forest/entities"
+import (
+	"fmt"
+	"forest/entities"
+	"forest/usecases/user"
+)
 
 type Repository interface {
-	CreateReport(Title string, Content string, Photo string, Status string, ForestAddress string, Description string) (*entities.Report, error)
+	CreateReport(report *entities.Report) (*entities.Report, error)
 	GetReports() ([]*entities.Report, error)
 	GetReportByID(id int) (*entities.Report, error)
 	UpdateReport(Title string, Content string, Status string) (*entities.Report, error)
@@ -11,11 +15,16 @@ type Repository interface {
 }
 
 type ReportUseCase struct {
-	Repo Repository
+	Repo     Repository
+	UserRepo user.Repository
 }
 
-func (r ReportUseCase) CreateReport(Title string, Content string, Photo string, Status string, ForestAddress string, Description string) (*entities.Report, error) {
-	return r.Repo.CreateReport(Title, Content, Photo, Status, ForestAddress, Description)
+func (r ReportUseCase) CreateReport(report *entities.Report) (*entities.Report, error) {
+	_, err := r.UserRepo.GetUserByID(report.UserID)
+	if err != nil {
+		return nil, fmt.Errorf("user not found: %w", err)
+	}
+	return r.Repo.CreateReport(report)
 }
 
 func (r ReportUseCase) GetReports() ([]*entities.Report, error) {

@@ -6,6 +6,7 @@ import (
 	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 	"log"
 	"os"
 )
@@ -25,11 +26,14 @@ func Connect() (*gorm.DB, error) {
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		dbUser, dbPass, dbHost, dbPort, dbDatabase)
 
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	if err != nil {
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Info),
+	})
+
+	if err := db.AutoMigrate(&entities.User{}, &entities.Admin{}, &entities.Report{}); err != nil {
+		log.Fatalf("Failed to auto-migrate: %v", err)
 		return nil, err
 	}
-	db.AutoMigrate(entities.User{}, entities.Admin{}, entities.Report{})
 
 	return db, nil
 }

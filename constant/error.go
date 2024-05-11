@@ -17,4 +17,5 @@ var (
 	ErrorInitCloud    = errors.New("failed to initialize Cloudinary service")
 	ErrorGetFile      = errors.New("failed to get file from form")
 	ErrorFailidCreate = errors.New("failed to create report")
+	ErrorInvalidToken = errors.New("invalid user token")
 )

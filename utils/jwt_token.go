@@ -2,6 +2,7 @@ package utils
 
 import (
 	"github.com/golang-jwt/jwt"
+	"os"
 	"time"
 )
 
@@ -9,10 +10,16 @@ type JwtToken struct {
 }
 
 func CreateToken(userID int) (string, error) {
-	claims := jwt.MapClaims{}
-	claims["authorized"] = true
-	claims["user_id"] = userID
-	claims["exp"] = time.Now().Add(time.Hour * 1).Unix()
+	claims := jwt.MapClaims{
+		"authorized": true,
+		"user_id":    userID,
+		"exp":        time.Now().Add(time.Hour * 24).Unix(),
+	}
+
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString([]byte("secret"))
+	secret := os.Getenv("JWT_SECRET")
+	if secret == "" {
+		secret = "default_secret"
+	}
+	return token.SignedString([]byte(secret))
 }

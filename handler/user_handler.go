@@ -6,9 +6,10 @@ import (
 	"forest/handler/response"
 	"forest/usecases/user"
 	"forest/utils"
-	"github.com/labstack/echo/v4"
 	"net/http"
 	"strconv"
+
+	"github.com/labstack/echo/v4"
 )
 
 type UserHandler struct {
@@ -34,6 +35,7 @@ func (h UserHandler) GetUserByID(c echo.Context) error {
 			"error":   err.Error(),
 		})
 	}
+
 	user, err := h.UserUseCase.GetUserByID(id)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{

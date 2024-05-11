@@ -1,9 +1,12 @@
 package user
 
 import (
+	"errors"
+	"fmt"
 	"forest/entities"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type Repository struct {
@@ -18,8 +21,14 @@ func (repo Repository) GetUsers() ([]*entities.User, error) {
 
 func (repo Repository) GetUserByID(id int) (*entities.User, error) {
 	var user entities.User
-	result := repo.DB.Where("id = ?", id).First(&user)
-	return &user, result.Error
+	result := repo.DB.Clauses(clause.Locking{Strength: "UPDATE"}).First(&user, id)
+	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return nil, fmt.Errorf("user with ID %d not found", id)
+		}
+		return nil, result.Error
+	}
+	return &user, nil
 }
 
 func (repo Repository) GetUserByEmail(email string) (*entities.User, error) {
@@ -54,10 +63,4 @@ func (repo Repository) RegisterUser(user *entities.User) (*entities.User, error)
 
 func (repo Repository) UpdateUser(user *entities.User) error {
 	return repo.DB.Save(user).Error
-}
-
-func (repo Repository) FindUserByID(id uint) (*entities.User, error) {
-	var user entities.User
-	result := repo.DB.Where("id = ?", id).Find(&user)
-	return &user, result.Error
 }
