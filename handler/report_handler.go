@@ -7,7 +7,9 @@ import (
 	"forest/handler/base"
 	"forest/handler/response"
 	"forest/usecases/report"
+	"forest/utils"
 	"net/http"
+	"strconv"
 
 	"github.com/cloudinary/cloudinary-go/api/uploader"
 	"github.com/labstack/echo/v4"
@@ -55,6 +57,7 @@ func (h *ReportHandler) CreateReport(c echo.Context) error {
 	report.Photo = uploadResult.SecureURL
 
 	userID, ok := c.Get("user_id").(int)
+
 	if !ok {
 		return c.JSON(http.StatusUnauthorized, map[string]interface{}{
 			"error": "Invalid user token",
@@ -64,11 +67,27 @@ func (h *ReportHandler) CreateReport(c echo.Context) error {
 
 	createdReport, err := h.ReportUseCase.CreateReport(report)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"error":   "Failed to create report",
-			"details": err.Error(),
-		})
+		return c.JSON(utils.ConvertResponseCode(err), base.NewErrResponse(err.Error()))
 	}
 
 	return c.JSON(http.StatusCreated, base.NewSuccessResponse("Report created successfully", response.FromUseCaseReport(createdReport)))
+}
+
+func (h *ReportHandler) ApproveReport(c echo.Context) error {
+	reportIDStr := c.Param("id")
+	reportID, err := strconv.Atoi(reportIDStr)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error": "Invalid report ID",
+		})
+	}
+
+	adminID := c.Get("user_id").(int)
+
+	err = h.ReportUseCase.ApproveReport(reportID, adminID)
+	if err != nil {
+		return c.JSON(utils.ConvertResponseCode(err), base.NewErrResponse(err.Error()))
+	}
+
+	return c.JSON(http.StatusOK, base.NewSuccessResponse("Report approved successfully", nil))
 }

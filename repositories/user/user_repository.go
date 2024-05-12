@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"forest/entities"
+
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -63,4 +64,13 @@ func (repo Repository) RegisterUser(user *entities.User) (*entities.User, error)
 
 func (repo Repository) UpdateUser(user *entities.User) error {
 	return repo.DB.Save(user).Error
+}
+
+func (repo Repository) AddPointsToUser(userID, points int) error {
+	user, err := repo.GetUserByID(userID)
+	if err != nil {
+		return err
+	}
+	user.Points += points
+	return repo.UpdateUser(user)
 }

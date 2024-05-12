@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"os"
@@ -23,7 +24,7 @@ func AuthMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 		})
 		if err != nil {
 			fmt.Println("Error parsing token:", err)
-			if err == jwt.ErrSignatureInvalid {
+			if errors.Is(err, jwt.ErrSignatureInvalid) {
 				return echo.ErrUnauthorized
 			}
 			return echo.NewHTTPError(http.StatusBadRequest, "Invalid token")

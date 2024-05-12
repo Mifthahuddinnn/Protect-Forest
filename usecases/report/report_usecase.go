@@ -2,6 +2,7 @@ package report
 
 import (
 	"fmt"
+	"forest/constant"
 	"forest/entities"
 	"forest/usecases/user"
 )
@@ -10,8 +11,8 @@ type Repository interface {
 	CreateReport(report *entities.Report) (*entities.Report, error)
 	GetReports() ([]*entities.Report, error)
 	GetReportByID(id int) (*entities.Report, error)
-	UpdateReport(Title string, Content string, Status string) (*entities.Report, error)
 	DeleteReport(id int) error
+	UpdateReport(report *entities.Report) (*entities.Report, error) // Tambahkan metode UpdateReport di sini
 }
 
 type ReportUseCase struct {
@@ -24,6 +25,13 @@ func (r ReportUseCase) CreateReport(report *entities.Report) (*entities.Report, 
 	if err != nil {
 		return nil, fmt.Errorf("user not found: %w", err)
 	}
+	if report.Title == "" {
+		return nil, constant.ErrorTitleEmpty
+	}
+	if report.Content == "" {
+		return nil, constant.ErrorContentEmpty
+	}
+
 	return r.Repo.CreateReport(report)
 }
 
@@ -35,10 +43,32 @@ func (r ReportUseCase) GetReportByID(id int) (*entities.Report, error) {
 	return r.Repo.GetReportByID(id)
 }
 
-func (r ReportUseCase) UpdateReport(Title string, Content string, Status string) (*entities.Report, error) {
-	return r.Repo.UpdateReport(Title, Content, Status)
-}
-
 func (r ReportUseCase) DeleteReport(id int) error {
 	return r.Repo.DeleteReport(id)
+}
+
+func (r ReportUseCase) ApproveReport(reportID int, adminID int) error {
+	report, err := r.Repo.GetReportByID(reportID)
+	if err != nil {
+		return constant.ErrorReportNotFound
+	}
+
+	if report.Status == "approved" {
+		return constant.ErrorReportAlreadyApproved
+	}
+
+	report.Status = "approved"
+	report.ApprovedByAdminID = adminID
+
+	_, err = r.Repo.UpdateReport(report)
+	if err != nil {
+		return fmt.Errorf("failed to approve report: %w", err)
+	}
+
+	err = r.UserRepo.AddPointsToUser(report.UserID, 1)
+	if err != nil {
+		return fmt.Errorf("failed to add points to user: %w", err)
+	}
+
+	return nil
 }

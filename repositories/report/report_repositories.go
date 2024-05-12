@@ -2,6 +2,7 @@ package report
 
 import (
 	"forest/entities"
+
 	"gorm.io/gorm"
 )
 
@@ -29,12 +30,7 @@ func (repo Repository) CreateReport(report *entities.Report) (*entities.Report, 
 	return report, nil
 }
 
-func (repo Repository) UpdateReport(Title string, Content string, Status string) (*entities.Report, error) {
-	report := &entities.Report{
-		Title:   Title,
-		Content: Content,
-		Status:  Status,
-	}
+func (repo Repository) UpdateReport(report *entities.Report) (*entities.Report, error) {
 	result := repo.DB.Save(report)
 	return report, result.Error
 }

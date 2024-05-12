@@ -3,12 +3,13 @@ package database
 import (
 	"fmt"
 	"forest/entities"
+	"log"
+	"os"
+
 	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
-	"log"
-	"os"
 )
 
 func Connect() (*gorm.DB, error) {
@@ -30,7 +31,7 @@ func Connect() (*gorm.DB, error) {
 		Logger: logger.Default.LogMode(logger.Info),
 	})
 
-	if err := db.AutoMigrate(&entities.User{}, &entities.Admin{}, &entities.Report{}); err != nil {
+	if err := db.AutoMigrate(&entities.User{}, &entities.Admin{}, &entities.Report{}, &entities.Redeem{}, &entities.Balance{}); err != nil {
 		log.Fatalf("Failed to auto-migrate: %v", err)
 		return nil, err
 	}

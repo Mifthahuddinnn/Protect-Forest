@@ -51,6 +51,7 @@ func main() {
 
 	r := e.Group("/api")
 	r.Use(middleware.AuthMiddleware)
+	r.POST("/reports/approve/:id", reportHandler.ApproveReport)
 	r.POST("/reports", reportHandler.CreateReport)
 
 	e.Logger.Fatal(e.Start(":8000"))
