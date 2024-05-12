@@ -58,7 +58,7 @@ func (r ReportUseCase) ApproveReport(reportID int, adminID int) error {
 	}
 
 	report.Status = "approved"
-	report.ApprovedByAdminID = adminID
+	report.ApprovedByAdminID = &adminID
 
 	_, err = r.Repo.UpdateReport(report)
 	if err != nil {
