@@ -63,3 +63,4 @@ func (u *UserUseCase) GetUsers() ([]*entities.User, error) {
 func (u *UserUseCase) AddPointsToUser(userID, points int) error {
 	return u.Repo.AddPointsToUser(userID, points)
 }
+

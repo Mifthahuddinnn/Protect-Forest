@@ -25,4 +25,5 @@ var (
 	ErrorAdminEmptyField           = errors.New("username and password are required")
 	ErrorReportNotFound            = errors.New("report not found")
 	ErrorInvalidUsernameOrPassword = errors.New("invalid username or password")
+
 )

@@ -12,7 +12,8 @@ type Repository interface {
 	GetReports() ([]*entities.Report, error)
 	GetReportByID(id int) (*entities.Report, error)
 	DeleteReport(id int) error
-	UpdateReport(report *entities.Report) (*entities.Report, error) // Tambahkan metode UpdateReport di sini
+	UpdateReport(report *entities.Report) (*entities.Report, error)
+
 }
 
 type ReportUseCase struct {
@@ -58,7 +59,7 @@ func (r ReportUseCase) ApproveReport(reportID int, adminID int) error {
 	}
 
 	report.Status = "approved"
-	report.ApprovedByAdminID = &adminID
+	report.AdminID = &adminID
 
 	_, err = r.Repo.UpdateReport(report)
 	if err != nil {
@@ -72,3 +73,5 @@ func (r ReportUseCase) ApproveReport(reportID int, adminID int) error {
 
 	return nil
 }
+
+
