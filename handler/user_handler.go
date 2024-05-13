@@ -83,3 +83,21 @@ func (h UserHandler) LoginUser(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, base.NewLoginResponse("Login success", token))
 }
+
+func (h *UserHandler) RedeemPoints(c echo.Context) error {
+	userID, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error": "Invalid user ID",
+		})
+	}
+
+	err = h.UserUseCase.RedeemPoints(userID)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"error": err.Error(),
+		})
+	}
+
+	return c.JSON(http.StatusOK, base.NewSuccessResponse("Points redeemed successfully", nil))
+}

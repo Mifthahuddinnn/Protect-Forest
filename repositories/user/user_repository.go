@@ -74,3 +74,46 @@ func (repo Repository) AddPointsToUser(userID, points int) error {
 	user.Points += points
 	return repo.UpdateUser(user)
 }
+
+func (repo Repository) GetBalanceByUserID(userID int) (*entities.Balance, error) {
+	var balance entities.Balance
+	result := repo.DB.Where("user_id = ?", userID).First(&balance)
+	return &balance, result.Error
+}
+
+func (repo Repository) UpdateBalance(balance *entities.Balance) error {
+	return repo.DB.Save(balance).Error
+}
+
+func (repo Repository) RedeemPoints(userID int) error {
+	user, err := repo.GetUserByID(userID)
+	if err != nil {
+		return err
+	}
+
+	if user.Points < 5 {
+		return errors.New("Insufficient points for redemption")
+	}
+
+	user.Points -= 5
+	if err := repo.UpdateUser(user); err != nil {
+		return err
+	}
+
+	balance, err := repo.GetBalanceByUserID(userID)
+	if err != nil {
+		return err
+	}
+
+	balance.Amount += 10000
+	if err := repo.UpdateBalance(balance); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (repo Repository) CreateBalance(balance *entities.Balance) error {
+	result := repo.DB.Create(balance)
+	return result.Error
+}

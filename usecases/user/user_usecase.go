@@ -17,6 +17,10 @@ type Repository interface {
 	GetUserByEmail(email string) (*entities.User, error)
 	UpdateUser(*entities.User) error
 	AddPointsToUser(userID, points int) error
+	RedeemPoints(userID int) error
+	GetBalanceByUserID(userID int) (*entities.Balance, error)
+	UpdateBalance(*entities.Balance) error
+	CreateBalance(*entities.Balance) error
 }
 
 type UserUseCase struct {
@@ -45,7 +49,22 @@ func (u *UserUseCase) RegisterUser(user *entities.User) (*entities.User, error) 
 		return nil, constant.ErrorEmailExists
 	}
 
-	return u.Repo.RegisterUser(user)
+	// Register user
+	registeredUser, err := u.Repo.RegisterUser(user)
+	if err != nil {
+		return nil, err
+	}
+
+	// Create default balance record
+	defaultBalance := &entities.Balance{
+		UserID: registeredUser.ID,
+		Amount: 0, // Set initial balance amount here if needed
+	}
+	if err := u.Repo.CreateBalance(defaultBalance); err != nil {
+		return nil, err
+	}
+
+	return registeredUser, nil
 }
 
 func (u *UserUseCase) LoginUser(email, password string) (*entities.User, error) {
@@ -64,3 +83,14 @@ func (u *UserUseCase) AddPointsToUser(userID, points int) error {
 	return u.Repo.AddPointsToUser(userID, points)
 }
 
+func (u *UserUseCase) RedeemPoints(userID int) error {
+	return u.Repo.RedeemPoints(userID)
+}
+
+func (u *UserUseCase) GetBalanceByUserID(userID int) (*entities.Balance, error) {
+	return u.Repo.GetBalanceByUserID(userID)
+}
+
+func (u *UserUseCase) UpdateBalance(balance *entities.Balance) error {
+	return u.Repo.UpdateBalance(balance)
+}
