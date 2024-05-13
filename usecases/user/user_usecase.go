@@ -49,16 +49,14 @@ func (u *UserUseCase) RegisterUser(user *entities.User) (*entities.User, error) 
 		return nil, constant.ErrorEmailExists
 	}
 
-	// Register user
 	registeredUser, err := u.Repo.RegisterUser(user)
 	if err != nil {
 		return nil, err
 	}
 
-	// Create default balance record
 	defaultBalance := &entities.Balance{
 		UserID: registeredUser.ID,
-		Amount: 0, // Set initial balance amount here if needed
+		Amount: 0, 
 	}
 	if err := u.Repo.CreateBalance(defaultBalance); err != nil {
 		return nil, err
