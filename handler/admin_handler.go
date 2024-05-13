@@ -2,10 +2,12 @@ package handler
 
 import (
 	"forest/entities"
+	"forest/handler/base"
 	"forest/usecases/admin"
 	"forest/utils"
-	"github.com/labstack/echo/v4"
 	"net/http"
+
+	"github.com/labstack/echo/v4"
 )
 
 type AdminHandler struct {
@@ -15,54 +17,28 @@ type AdminHandler struct {
 func (ah AdminHandler) RegisterAdmin(c echo.Context) error {
 	admin := &entities.Admin{}
 	if err := c.Bind(admin); err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "Invalid request",
-			"error":   err.Error(),
-		})
+		return c.JSON(utils.ConvertResponseCode(err), base.NewErrResponse(err.Error()))
 	}
 	registeredAdmin, err := ah.AdminUseCase.RegisterAdmin(admin)
 	if err != nil {
-		if err.Error() == "username already exist" {
-			return c.JSON(http.StatusBadRequest, map[string]interface{}{
-				"message": "Username already exist",
-				"error":   err.Error(),
-			})
-		}
-		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"message": "Failed to register admin",
-			"error":   err.Error(),
-		})
+		return c.JSON(utils.ConvertResponseCode(err), base.NewErrResponse(err.Error()))
 	}
-	return c.JSON(http.StatusOK, registeredAdmin)
+	return c.JSON(http.StatusOK, base.NewSuccessResponse("Admin registered successfully", registeredAdmin))
 }
 
 func (ah AdminHandler) LoginAdmin(c echo.Context) error {
 	loginAdmin := &entities.Admin{}
 	if err := c.Bind(loginAdmin); err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "Invalid request",
-			"error":   err.Error(),
-		})
+		return c.JSON(utils.ConvertResponseCode(err), base.NewErrResponse(err.Error()))
 	}
 	admin, err := ah.AdminUseCase.LoginAdmin(loginAdmin.Username, loginAdmin.Password)
 	if err != nil {
-		return c.JSON(http.StatusUnauthorized, map[string]interface{}{
-			"message": "Invalid username or password",
-			"error":   err.Error(),
-		})
+		return c.JSON(utils.ConvertResponseCode(err), base.NewErrResponse(err.Error()))
 
 	}
 	token, err := utils.CreateToken(admin.ID)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"message": "Failed to create token",
-			"error":   err.Error(),
-		})
-
+		return c.JSON(utils.ConvertResponseCode(err), base.NewErrResponse(err.Error()))
 	}
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message": "Login success",
-		"token":   token,
-		"data":    admin,
-	})
+	return c.JSON(http.StatusOK, base.NewLoginResponse("Login Success", token))
 }

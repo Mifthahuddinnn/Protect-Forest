@@ -6,9 +6,10 @@ import (
 	"forest/handler/response"
 	"forest/usecases/user"
 	"forest/utils"
-	"github.com/labstack/echo/v4"
 	"net/http"
 	"strconv"
+
+	"github.com/labstack/echo/v4"
 )
 
 type UserHandler struct {
@@ -34,6 +35,7 @@ func (h UserHandler) GetUserByID(c echo.Context) error {
 			"error":   err.Error(),
 		})
 	}
+
 	user, err := h.UserUseCase.GetUserByID(id)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
@@ -59,7 +61,6 @@ func (h UserHandler) RegisterUser(c echo.Context) error {
 
 func (h UserHandler) LoginUser(c echo.Context) error {
 	loginUser := &entities.User{}
-	// TODO mapping di dalam variable
 	if err := c.Bind(loginUser); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": "Invalid request",
@@ -69,10 +70,9 @@ func (h UserHandler) LoginUser(c echo.Context) error {
 
 	user, err := h.UserUseCase.LoginUser(loginUser.Email, loginUser.Password)
 	if err != nil {
-		// TODO mapping di dalam variable
-		return c.JSON(http.StatusUnauthorized, map[string]interface{}{
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": "Invalid email or password",
-			"status":  "401",
+			"status":  "400",
 		})
 	}
 

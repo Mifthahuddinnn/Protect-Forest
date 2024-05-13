@@ -2,7 +2,9 @@ package admin
 
 import (
 	"errors"
+	"forest/constant"
 	"forest/entities"
+
 	"gorm.io/gorm"
 )
 
@@ -18,18 +20,22 @@ type UseCaseAdmin struct {
 
 func (a UseCaseAdmin) RegisterAdmin(admin *entities.Admin) (*entities.Admin, error) {
 	if admin.Username == "" || admin.Password == "" {
-		return nil, errors.New("username and password are required")
+		return nil, constant.ErrorAdminEmptyField
 	}
 	existingUsername, err := a.Repo.GetAdminUsername(admin.Username)
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, err
 	}
 	if existingUsername.Username != "" {
-		return nil, errors.New("username already exist")
+		return nil, constant.ErrorUsernameAlreadyExist
 	}
 	return a.Repo.RegisterAdmin(admin)
 }
 
 func (a UseCaseAdmin) LoginAdmin(username, password string) (*entities.Admin, error) {
+	if username == "" || password == "" {
+		return nil, constant.ErrorAdminEmptyField
+	}
 	return a.Repo.LoginAdmin(username, password)
+
 }

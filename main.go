@@ -10,8 +10,9 @@ import (
 	"forest/usecases/admin"
 	report2 "forest/usecases/report"
 	"forest/usecases/user"
-	"github.com/labstack/echo/v4"
 	"log"
+
+	"github.com/labstack/echo/v4"
 )
 
 func main() {
@@ -23,7 +24,7 @@ func main() {
 	// User
 	userRepo := user2.Repository{DB: db}
 	userUseCase := user.UserUseCase{Repo: userRepo}
-	useHandler := handler.UserHandler{UserUseCase: userUseCase}
+	userHandler := handler.UserHandler{UserUseCase: userUseCase}
 
 	// Admin
 	adminRepo := admin2.Repository{DB: db}
@@ -32,26 +33,26 @@ func main() {
 
 	// Report
 	reportRepo := report.Repository{DB: db}
-	reportUseCase := report2.ReportUseCase{Repo: reportRepo}
+	reportUseCase := report2.ReportUseCase{
+		Repo:     reportRepo,
+		UserRepo: userRepo,
+	}
 	reportHandler := handler.ReportHandler{ReportUseCase: reportUseCase}
 
 	e := echo.New()
 
-	// Register Login User
-	e.GET("/users", useHandler.GetUsers)
-	e.GET("/users/:id", useHandler.GetUserByID)
-	e.POST("/users/register", useHandler.RegisterUser)
-	e.POST("/users/login", useHandler.LoginUser)
-
-	r := e.Group("")
-	r.Use(middleware.JWTMiddleware)
-
-	// Reporting
-	r.POST("/reports", reportHandler.CreateReport)
-
-	// Register Login Admin
+	// Public routes
+	e.GET("/users", userHandler.GetUsers)
+	e.GET("/users/:id", userHandler.GetUserByID)
+	e.POST("/users/register", userHandler.RegisterUser)
+	e.POST("/users/login", userHandler.LoginUser)
 	e.POST("/admin/register", adminHandler.RegisterAdmin)
 	e.POST("/admin/login", adminHandler.LoginAdmin)
+
+	r := e.Group("/api")
+	r.Use(middleware.AuthMiddleware)
+	r.POST("/reports/approve/:id", reportHandler.ApproveReport)
+	r.POST("/reports", reportHandler.CreateReport)
 
 	e.Logger.Fatal(e.Start(":8000"))
 

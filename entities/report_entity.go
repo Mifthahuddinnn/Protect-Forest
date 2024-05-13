@@ -4,6 +4,9 @@ import "time"
 
 type Report struct {
 	ID            int       `json:"id" gorm:"primaryKey"`
+	UserID        int       `json:"user_id" gorm:"index;constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
+	User          User      `gorm:"foreignKey:UserID;references:ID"`
+	AdminID       *int      `json:"admin_id,omitempty" gorm:"index;constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
 	Title         string    `json:"title" form:"title"`
 	Content       string    `json:"content" form:"content"`
 	ForestAddress string    `json:"forest" form:"forest"`

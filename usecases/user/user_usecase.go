@@ -4,8 +4,9 @@ import (
 	"errors"
 	"forest/constant"
 	"forest/entities"
-	"gorm.io/gorm"
 	"strings"
+
+	"gorm.io/gorm"
 )
 
 type Repository interface {
@@ -15,6 +16,7 @@ type Repository interface {
 	GetUsers() ([]*entities.User, error)
 	GetUserByEmail(email string) (*entities.User, error)
 	UpdateUser(*entities.User) error
+	AddPointsToUser(userID, points int) error
 }
 
 type UserUseCase struct {
@@ -57,3 +59,8 @@ func (u *UserUseCase) GetUserByID(id int) (*entities.User, error) {
 func (u *UserUseCase) GetUsers() ([]*entities.User, error) {
 	return u.Repo.GetUsers()
 }
+
+func (u *UserUseCase) AddPointsToUser(userID, points int) error {
+	return u.Repo.AddPointsToUser(userID, points)
+}
+
