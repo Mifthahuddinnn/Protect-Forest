@@ -33,5 +33,9 @@ func (a UseCaseAdmin) RegisterAdmin(admin *entities.Admin) (*entities.Admin, err
 }
 
 func (a UseCaseAdmin) LoginAdmin(username, password string) (*entities.Admin, error) {
+	if username == "" || password == "" {
+		return nil, constant.ErrorAdminEmptyField
+	}
 	return a.Repo.LoginAdmin(username, password)
+
 }

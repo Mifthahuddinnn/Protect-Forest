@@ -29,26 +29,16 @@ func (ah AdminHandler) RegisterAdmin(c echo.Context) error {
 func (ah AdminHandler) LoginAdmin(c echo.Context) error {
 	loginAdmin := &entities.Admin{}
 	if err := c.Bind(loginAdmin); err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "Invalid request",
-			"error":   err.Error(),
-		})
+		return c.JSON(utils.ConvertResponseCode(err), base.NewErrResponse(err.Error()))
 	}
 	admin, err := ah.AdminUseCase.LoginAdmin(loginAdmin.Username, loginAdmin.Password)
 	if err != nil {
-		return c.JSON(http.StatusUnauthorized, map[string]interface{}{
-			"message": "Invalid username or password",
-			"error":   err.Error(),
-		})
+		return c.JSON(utils.ConvertResponseCode(err), base.NewErrResponse(err.Error()))
 
 	}
 	token, err := utils.CreateToken(admin.ID)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"message": "Failed to create token",
-			"error":   err.Error(),
-		})
-
+		return c.JSON(utils.ConvertResponseCode(err), base.NewErrResponse(err.Error()))
 	}
 	return c.JSON(http.StatusOK, base.NewLoginResponse("Login Success", token))
 }

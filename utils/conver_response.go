@@ -43,8 +43,10 @@ func ConvertResponseCode(err error) int {
 		return http.StatusBadRequest
 	case constant.ErrorAdminEmptyField:
 		return http.StatusBadRequest
-		case constant.ErrorReportNotFound:
+	case constant.ErrorReportNotFound:
 		return http.StatusNotFound
+	case constant.ErrorInvalidUsernameOrPassword:
+		return http.StatusBadRequest
 	default:
 		return http.StatusInternalServerError
 	}

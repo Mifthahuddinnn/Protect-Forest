@@ -70,9 +70,9 @@ func (h UserHandler) LoginUser(c echo.Context) error {
 
 	user, err := h.UserUseCase.LoginUser(loginUser.Email, loginUser.Password)
 	if err != nil {
-		return c.JSON(http.StatusUnauthorized, map[string]interface{}{
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": "Invalid email or password",
-			"status":  "401",
+			"status":  "400",
 		})
 	}
 
