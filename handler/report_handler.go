@@ -91,3 +91,30 @@ func (h *ReportHandler) ApproveReport(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, base.NewSuccessResponse("Report approved successfully", nil))
 }
+
+//func (h *ReportHandler) RejectReport(c echo.Context) error {
+//	reportIDStr := c.Param("id")
+//	reportID, err := strconv.Atoi(reportIDStr)
+//	if err != nil {
+//		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+//			"error": "Invalid report ID",
+//		})
+//	}
+//
+//	adminID := c.Get("user_id").(int)
+//
+//	err = h.ReportUseCase.RejectReport(reportID, adminID)
+//	if err != nil {
+//		return c.JSON(utils.ConvertResponseCode(err), base.NewErrResponse(err.Error()))
+//	}
+//
+//	return c.JSON(http.StatusOK, base.NewSuccessResponse("Report rejected successfully", nil))
+//}
+
+func (h *ReportHandler) GetReports(c echo.Context) error {
+	_, err := h.ReportUseCase.GetReports()
+	if err != nil {
+		return c.JSON(utils.ConvertResponseCode(err), base.NewErrResponse(err.Error()))
+	}
+	return c.JSON(http.StatusOK, base.NewSuccessResponse("Reports retrieved successfully", nil))
+}

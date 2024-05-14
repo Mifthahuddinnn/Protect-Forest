@@ -1,9 +1,12 @@
 package user
 
 import (
+	"encoding/json"
 	"errors"
 	"forest/constant"
 	"forest/entities"
+	"io/ioutil"
+	"net/http"
 	"strings"
 
 	"gorm.io/gorm"
@@ -93,4 +96,22 @@ func (u *UserUseCase) GetBalanceByUserID(userID int) (*entities.Balance, error) 
 
 func (u *UserUseCase) UpdateBalance(balance *entities.Balance) error {
 	return u.Repo.UpdateBalance(balance)
+}
+
+func (u *UserUseCase) GetNews() (*entities.NewsResponse, error) {
+	resp, err := http.Get("https://newsdata.io/api/1/news?apikey=pub_441559a0bbb34983f12e0cf2d0f52329f4f2c&q=hutan&country=id&language=id")
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	bodyBytes, _ := ioutil.ReadAll(resp.Body)
+
+	var newsResponse entities.NewsResponse
+	err = json.Unmarshal(bodyBytes, &newsResponse)
+	if err != nil {
+		return nil, err
+	}
+
+	return &newsResponse, nil
 }

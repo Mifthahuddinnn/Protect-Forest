@@ -6,10 +6,9 @@ import (
 	"forest/handler/response"
 	"forest/usecases/user"
 	"forest/utils"
+	"github.com/labstack/echo/v4"
 	"net/http"
 	"strconv"
-
-	"github.com/labstack/echo/v4"
 )
 
 type UserHandler struct {
@@ -84,7 +83,7 @@ func (h UserHandler) LoginUser(c echo.Context) error {
 	return c.JSON(http.StatusOK, base.NewLoginResponse("Login success", token))
 }
 
-func (h *UserHandler) RedeemPoints(c echo.Context) error {
+func (h UserHandler) RedeemPoints(c echo.Context) error {
 	userID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -100,4 +99,15 @@ func (h *UserHandler) RedeemPoints(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, base.NewSuccessResponse("Points redeemed successfully", nil))
+}
+
+func (h UserHandler) GetNews(c echo.Context) error {
+	news, err := h.UserUseCase.GetNews()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"error": err.Error(),
+		})
+	}
+
+	return c.JSON(http.StatusOK, news)
 }
