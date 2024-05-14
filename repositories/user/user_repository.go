@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"forest/entities"
+	"time"
 
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
@@ -97,6 +98,14 @@ func (repo Repository) RedeemPoints(userID int) error {
 
 	user.Points -= 5
 	if err := repo.UpdateUser(user); err != nil {
+		return err
+	}
+
+	redeem := entities.Redeem{
+		UserID:     userID,
+		RedeemDate: time.Now(),
+	}
+	if err := repo.DB.Create(&redeem).Error; err != nil {
 		return err
 	}
 
