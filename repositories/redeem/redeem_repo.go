@@ -2,7 +2,6 @@ package redeem
 
 import (
 	"forest/entities"
-
 	"gorm.io/gorm"
 )
 

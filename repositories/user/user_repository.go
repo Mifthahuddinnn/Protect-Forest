@@ -91,7 +91,7 @@ func (repo Repository) RedeemPoints(userID int) error {
 	if err != nil {
 		return err
 	}
-	// Todo letakan di usecase
+
 	if user.Points < 5 {
 		return errors.New("Insufficient points for redemption")
 	}
@@ -107,6 +107,14 @@ func (repo Repository) RedeemPoints(userID int) error {
 	}
 
 	if err := repo.UpdateUser(user); err != nil {
+		return err
+	}
+
+	redeem := entities.Redeem{
+		UserID:     userID,
+		RedeemDate: time.Now(),
+	}
+	if err := repo.DB.Create(&redeem).Error; err != nil {
 		return err
 	}
 

@@ -54,6 +54,12 @@ func main() {
 	r.POST("/reports/approve/:id", reportHandler.ApproveReport)
 	r.POST("/users/redeem/:id", userHandler.RedeemPoints)
 	r.POST("/reports", reportHandler.CreateReport)
+	r.GET("/news", userHandler.GetNews)
+
+	// admin
+	r.GET("/reports", reportHandler.GetReports)
+	r.GET("/reports/:id", reportHandler.GetReportByID)
+	r.DELETE("/reports/:id", reportHandler.DeleteReport)
 
 	e.Logger.Fatal(e.Start(":8000"))
 

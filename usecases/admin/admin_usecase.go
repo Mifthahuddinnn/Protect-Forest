@@ -4,6 +4,7 @@ import (
 	"errors"
 	"forest/constant"
 	"forest/entities"
+	"golang.org/x/crypto/bcrypt"
 
 	"gorm.io/gorm"
 )
@@ -36,6 +37,15 @@ func (a UseCaseAdmin) LoginAdmin(username, password string) (*entities.Admin, er
 	if username == "" || password == "" {
 		return nil, constant.ErrorAdminEmptyField
 	}
+	existingAdmin, err := a.Repo.GetAdminUsername(username)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, constant.ErrorUsernameNotFound
+		}
+		return nil, err
+	}
+	if err = bcrypt.CompareHashAndPassword([]byte(existingAdmin.Password), []byte(password)); err != nil {
+		return nil, constant.ErrorIncorrectPassword
+	}
 	return a.Repo.LoginAdmin(username, password)
-
 }
