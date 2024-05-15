@@ -1,7 +1,7 @@
 # Hutan Lindung
 
 ## About Project
-tambahkan deskripsi project disini
+Hutan lindung API project adalah sebuah project API yang dapat menangani permasalahan mengenai isu - isu lingkungan terkhusunya hutan. Masyrakat dapat dengan mudah membuat laporan dan juga menyertakan bukti - bukti mengenai pelanggaran - pelangaran yang terjadi di sekitar hutan. Masyarakat juga bahkan mendapatkan points yang nantinya dapat ditukar dengan uang jika laporan yang dibuat di approve oleh admin
 
 ## Features
 sebutkan fitur-fitur yang ada di project yang dibuat
