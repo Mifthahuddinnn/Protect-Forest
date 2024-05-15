@@ -1,4 +1,4 @@
-# Project Name
+# Hutan Lindung
 
 ## About Project
 tambahkan deskripsi project disini
@@ -7,14 +7,17 @@ tambahkan deskripsi project disini
 sebutkan fitur-fitur yang ada di project yang dibuat
 
 ### User
-- feature A
-- feature B
-- feature C
+- User dapat membuat akun
+- User dapat login
+- User dapat melihat berita
+- User dapat melakukan redeem
+- User dapat membuat report 
 
 ### Admin
-- feature A
-- feature B
-- feature C
+- Admin dapat membuat akun
+- Admin dapat login
+- Admin dapat manghapus report
+- Admin dapat menerima laporan
 
 ## Tech Stacks
 - GORM
