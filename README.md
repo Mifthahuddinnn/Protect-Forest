@@ -21,9 +21,11 @@ sebutkan fitur-fitur yang ada di project yang dibuat
 - Admin dapat menerima laporan
 
 ## Tech Stacks
-- GORM
-- Cloudinary
-- AWS
+- DB : Mysql
+- ORM : GORM
+- AUTH : JWT
+- Eksternal API : News api
+- Code structure : Clean Architecture
 
 ## API Documentation
 https://documenter.getpostman.com/view/30011673/2sA3JQ6fY3
@@ -32,4 +34,7 @@ https://documenter.getpostman.com/view/30011673/2sA3JQ6fY3
 ![forestv1](https://github.com/Mifthahuddinnn/Protect-Forest/assets/142136573/e8e2c196-7e07-4db7-ba8f-34833e8ed72b)
 
 ## Setup 
-sebutkan cara menggunakan project ini di lokal
+- git clone repository
+- buat .env
+- run perintah go mod tidy
+- run dengan cara go run main.go
