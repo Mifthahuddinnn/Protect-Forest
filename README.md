@@ -16,6 +16,7 @@ sebutkan fitur-fitur yang ada di project yang dibuat
 ### Admin
 - Admin dapat membuat akun
 - Admin dapat login
+- Admin dapat melihat report
 - Admin dapat manghapus report
 - Admin dapat menerima laporan
 
