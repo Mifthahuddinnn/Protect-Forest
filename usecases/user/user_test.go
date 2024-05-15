@@ -108,9 +108,12 @@ func TestRedeemPoints(t *testing.T) {
 	mockRepo := new(MockRepo)
 	userID := 1
 	mockUser := &entities.User{ID: userID, Points: 10}
+	mockBalance := &entities.Balance{UserID: userID, Amount: 0}
 
 	mockRepo.On("GetUserByID", userID).Return(mockUser, nil)
 	mockRepo.On("UpdateUser", mockUser).Return(nil)
+	mockRepo.On("GetBalanceByUserID", userID).Return(mockBalance, nil) // Add this line
+	mockRepo.On("UpdateBalance", mockBalance).Return(nil)              // Add this line
 
 	usecase := user.UserUseCase{
 		Repo: mockRepo,
@@ -214,7 +217,6 @@ func TestUpdateUser(t *testing.T) {
 	mockRepo := new(MockRepo)
 	mockUser := &entities.User{ID: 1, Email: "test@test.com", Password: "password", Name: "Test User"}
 
-	// Set up the expectation
 	mockRepo.On("UpdateUser", mockUser).Return(nil)
 
 	usecase := user.UserUseCase{
