@@ -97,6 +97,30 @@ func (u *UserUseCase) RedeemPoints(userID int) error {
 		return constant.ErrorPointNotEnough
 	}
 
+	// Subtract points from the user
+	user.Points -= 5
+
+	// Update the user in the repository
+	err = u.Repo.UpdateUser(user)
+	if err != nil {
+		return err
+	}
+
+	// Get the user's balance
+	balance, err := u.Repo.GetBalanceByUserID(userID)
+	if err != nil {
+		return err
+	}
+
+	// Add to the user's balance
+	balance.Amount += 10000
+
+	// Update the balance in the repository
+	err = u.Repo.UpdateBalance(balance)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
