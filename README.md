@@ -1,32 +1,40 @@
-# Project Name
+# Hutan Lindung
 
 ## About Project
-tambahkan deskripsi project disini
+Hutan lindung API project adalah sebuah project API yang dapat menangani permasalahan mengenai isu - isu lingkungan terkhusunya hutan. Masyrakat dapat dengan mudah membuat laporan dan juga menyertakan bukti - bukti mengenai pelanggaran - pelangaran yang terjadi di sekitar hutan. Masyarakat juga bahkan mendapatkan points yang nantinya dapat ditukar dengan uang jika laporan yang dibuat di approve oleh admin
 
 ## Features
 sebutkan fitur-fitur yang ada di project yang dibuat
 
 ### User
-- feature A
-- feature B
-- feature C
+- User dapat membuat akun
+- User dapat login
+- User dapat melihat berita
+- User dapat melakukan redeem
+- User dapat membuat report 
 
 ### Admin
-- feature A
-- feature B
-- feature C
+- Admin dapat membuat akun
+- Admin dapat login
+- Admin dapat melihat report
+- Admin dapat manghapus report
+- Admin dapat menerima laporan
 
 ## Tech Stacks
-sebutkan daftar tools dan framework yang digunakan dalam bentuk list seperti ini:
-- tech stack A
-- tech stack B
-- tech stack C
+- DB : Mysql
+- ORM : GORM
+- AUTH : JWT
+- Eksternal API : News api
+- Code structure : Clean Architecture
 
 ## API Documentation
-sertakan dokumentasi API yang dibuat dengan menggunakan postman / swagger.
+https://documenter.getpostman.com/view/30011673/2sA3JQ6fY3
 
 ## ERD
-sertakan gambar ERD. bisa ditempelkan langsung di file markdown atau diberi link
+![forestv1](https://github.com/Mifthahuddinnn/Protect-Forest/assets/142136573/e8e2c196-7e07-4db7-ba8f-34833e8ed72b)
 
 ## Setup 
-sebutkan cara menggunakan project ini di lokal
+- git clone repository
+- buat .env
+- run perintah go mod tidy
+- run dengan cara go run main.go
