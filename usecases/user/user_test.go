@@ -110,6 +110,7 @@ func TestRedeemPoints(t *testing.T) {
 	mockUser := &entities.User{ID: userID, Points: 10}
 
 	mockRepo.On("GetUserByID", userID).Return(mockUser, nil)
+	mockRepo.On("UpdateUser", mockUser).Return(nil)
 
 	usecase := user.UserUseCase{
 		Repo: mockRepo,
