@@ -27,4 +27,7 @@ var (
 	ErrorInvalidUsernameOrPassword = errors.New("invalid username or password")
 	ErrorUsernameNotFound          = errors.New("username not found")
 	ErrorIncorrectPassword         = errors.New("incorrect password")
+	ErrorUserNotFound              = errors.New("user not found")
+	ErrorPointNotEnough            = errors.New("point is not enough")
+	ErrorRecordNotFound            = errors.New("record not found")
 )

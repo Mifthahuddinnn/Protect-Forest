@@ -84,21 +84,29 @@ func (h UserHandler) LoginUser(c echo.Context) error {
 }
 
 func (h UserHandler) RedeemPoints(c echo.Context) error {
-	userID, err := strconv.Atoi(c.Param("id"))
+	tokenUserID := c.Get("user_id").(int)
+
+	urlUserID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"error": "Invalid user ID",
-		})
+		return c.JSON(utils.ConvertResponseCode(err), base.NewErrResponse(err.Error()))
 	}
 
-	err = h.UserUseCase.RedeemPoints(userID)
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"error": err.Error(),
-		})
+	if tokenUserID != urlUserID {
+		return c.JSON(http.StatusUnauthorized, base.NewErrResponse("Unauthorized to redeem points for this user"))
 	}
 
-	return c.JSON(http.StatusOK, base.NewSuccessResponse("Points redeemed successfully", nil))
+	err = h.UserUseCase.RedeemPoints(urlUserID)
+	if err != nil {
+		return c.JSON(utils.ConvertResponseCode(err), base.NewErrResponse(err.Error()))
+	}
+
+	user, err := h.UserUseCase.GetUserByID(urlUserID)
+	if err != nil {
+		return c.JSON(utils.ConvertResponseCode(err), base.NewErrResponse(err.Error()))
+	}
+
+	redeemResponse := response.NewRedeemResponse(user)
+	return c.JSON(http.StatusOK, base.NewSuccessResponse("Points redeemed successfully", redeemResponse))
 }
 
 func (h UserHandler) GetNews(c echo.Context) error {
@@ -109,5 +117,5 @@ func (h UserHandler) GetNews(c echo.Context) error {
 		})
 	}
 
-	return c.JSON(http.StatusOK, news)
+	return c.JSON(http.StatusOK, base.NewSuccessResponse("News retrieved successfully", news))
 }

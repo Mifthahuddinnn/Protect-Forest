@@ -92,10 +92,6 @@ func (repo Repository) RedeemPoints(userID int) error {
 		return err
 	}
 
-	if user.Points < 5 {
-		return errors.New("Insufficient points for redemption")
-	}
-
 	user.Points -= 5
 	if err := repo.UpdateUser(user); err != nil {
 		return err

@@ -7,6 +7,7 @@ import (
 	"forest/entities"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"strings"
 
 	"gorm.io/gorm"
@@ -52,16 +53,14 @@ func (u *UserUseCase) RegisterUser(user *entities.User) (*entities.User, error) 
 		return nil, constant.ErrorEmailExists
 	}
 
-	// Register user
 	registeredUser, err := u.Repo.RegisterUser(user)
 	if err != nil {
 		return nil, err
 	}
 
-	// Create default balance record
 	defaultBalance := &entities.Balance{
 		UserID: registeredUser.ID,
-		Amount: 0, // Set initial balance amount here if needed
+		Amount: 0,
 	}
 	if err := u.Repo.CreateBalance(defaultBalance); err != nil {
 		return nil, err
@@ -87,7 +86,18 @@ func (u *UserUseCase) AddPointsToUser(userID, points int) error {
 }
 
 func (u *UserUseCase) RedeemPoints(userID int) error {
-	return u.Repo.RedeemPoints(userID)
+	user, err := u.GetUserByID(userID)
+	if err != nil {
+		return err
+	}
+	if user == nil {
+		return constant.ErrorUserNotFound
+	}
+	if user.Points < 5 {
+		return constant.ErrorPointNotEnough
+	}
+
+	return nil
 }
 
 func (u *UserUseCase) GetBalanceByUserID(userID int) (*entities.Balance, error) {
@@ -98,8 +108,13 @@ func (u *UserUseCase) UpdateBalance(balance *entities.Balance) error {
 	return u.Repo.UpdateBalance(balance)
 }
 
+func (u *UserUseCase) UpdateUser(user *entities.User) error {
+	return u.Repo.UpdateUser(user)
+}
+
 func (u *UserUseCase) GetNews() (*entities.NewsResponse, error) {
-	resp, err := http.Get("https://newsdata.io/api/1/news?apikey=pub_441559a0bbb34983f12e0cf2d0f52329f4f2c&q=hutan&country=id&language=id")
+	apiKey := os.Getenv("NEWS_API_KEY")
+	resp, err := http.Get("https://newsdata.io/api/1/news?apikey=" + apiKey + "&q=hutan&country=id&language=id")
 	if err != nil {
 		return nil, err
 	}
