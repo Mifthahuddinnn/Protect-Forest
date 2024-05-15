@@ -17,16 +17,15 @@ sebutkan fitur-fitur yang ada di project yang dibuat
 - feature C
 
 ## Tech Stacks
-sebutkan daftar tools dan framework yang digunakan dalam bentuk list seperti ini:
-- tech stack A
-- tech stack B
-- tech stack C
+- GORM
+- Cloudinary
+- AWS
 
 ## API Documentation
-sertakan dokumentasi API yang dibuat dengan menggunakan postman / swagger.
+https://documenter.getpostman.com/view/30011673/2sA3JQ6fY3
 
 ## ERD
-sertakan gambar ERD. bisa ditempelkan langsung di file markdown atau diberi link
+![forestv1](https://github.com/Mifthahuddinnn/Protect-Forest/assets/142136573/e8e2c196-7e07-4db7-ba8f-34833e8ed72b)
 
 ## Setup 
 sebutkan cara menggunakan project ini di lokal
