@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"forest/entities"
-	"time"
 
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
@@ -91,21 +90,12 @@ func (repo Repository) RedeemPoints(userID int) error {
 	if err != nil {
 		return err
 	}
-	// Todo letakan di usecase
+
 	if user.Points < 5 {
 		return errors.New("Insufficient points for redemption")
 	}
 
 	user.Points -= 5
-
-	redeem := &entities.Redeem{
-		UserID:     user.ID,
-		RedeemDate: time.Now(),
-	}
-	if err := repo.CreateRedeem(redeem); err != nil {
-		return err
-	}
-
 	if err := repo.UpdateUser(user); err != nil {
 		return err
 	}
@@ -125,10 +115,5 @@ func (repo Repository) RedeemPoints(userID int) error {
 
 func (repo Repository) CreateBalance(balance *entities.Balance) error {
 	result := repo.DB.Create(balance)
-	return result.Error
-}
-
-func (repo Repository) CreateRedeem(redeem *entities.Redeem) error {
-	result := repo.DB.Create(redeem)
 	return result.Error
 }

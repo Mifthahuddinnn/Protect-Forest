@@ -13,7 +13,6 @@ type Repository interface {
 	GetReportByID(id int) (*entities.Report, error)
 	DeleteReport(id int) error
 	UpdateReport(report *entities.Report) (*entities.Report, error)
-
 }
 
 type ReportUseCase struct {
@@ -45,33 +44,41 @@ func (r ReportUseCase) GetReportByID(id int) (*entities.Report, error) {
 }
 
 func (r ReportUseCase) DeleteReport(id int) error {
+	report, err := r.Repo.GetReportByID(id)
+	if err != nil {
+		return err
+	}
+	if report == nil {
+		return fmt.Errorf("Report with ID %d not found", id)
+	}
+	if report.Status == "approved" {
+		return constant.ErrorReportAlreadyApproved
+	}
 	return r.Repo.DeleteReport(id)
 }
 
-func (r ReportUseCase) ApproveReport(reportID int, adminID int) error {
+func (r *ReportUseCase) ApproveReport(reportID int, adminID int) (*entities.Report, error) {
 	report, err := r.Repo.GetReportByID(reportID)
 	if err != nil {
-		return constant.ErrorReportNotFound
+		return nil, constant.ErrorReportNotFound
 	}
 
 	if report.Status == "approved" {
-		return constant.ErrorReportAlreadyApproved
+		return nil, constant.ErrorReportAlreadyApproved
 	}
 
 	report.Status = "approved"
 	report.AdminID = &adminID
 
-	_, err = r.Repo.UpdateReport(report)
+	updatedReport, err := r.Repo.UpdateReport(report)
 	if err != nil {
-		return fmt.Errorf("failed to approve report: %w", err)
+		return nil, fmt.Errorf("failed to approve report: %w", err)
 	}
 
 	err = r.UserRepo.AddPointsToUser(report.UserID, 1)
 	if err != nil {
-		return fmt.Errorf("failed to add points to user: %w", err)
+		return nil, fmt.Errorf("failed to add points to user: %w", err)
 	}
 
-	return nil
+	return updatedReport, nil
 }
-
-

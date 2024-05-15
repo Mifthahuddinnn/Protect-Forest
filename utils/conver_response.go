@@ -35,8 +35,6 @@ func ConvertResponseCode(err error) int {
 		return http.StatusBadRequest
 	case constant.ErrorFailedCreate:
 		return http.StatusInternalServerError
-	case constant.ErrorUploadFile:
-		return http.StatusInternalServerError
 	case constant.ErrorReportAlreadyApproved:
 		return http.StatusBadRequest
 	case constant.ErrorUsernameAlreadyExist:
@@ -47,6 +45,16 @@ func ConvertResponseCode(err error) int {
 		return http.StatusNotFound
 	case constant.ErrorInvalidUsernameOrPassword:
 		return http.StatusBadRequest
+	case constant.ErrorUsernameNotFound:
+		return http.StatusNotFound
+	case constant.ErrorIncorrectPassword:
+		return http.StatusBadRequest
+	case constant.ErrorUserNotFound:
+		return http.StatusNotFound
+	case constant.ErrorPointNotEnough:
+		return http.StatusBadRequest
+	case constant.ErrorRecordNotFound:
+		return http.StatusNotFound
 	default:
 		return http.StatusInternalServerError
 	}

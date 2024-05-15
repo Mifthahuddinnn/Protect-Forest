@@ -3,8 +3,8 @@ package entities
 import "time"
 
 type Report struct {
-	ID            int       `json:"id" gorm:"primaryKey"`
-	UserID        int       `json:"user_id" gorm:"index;constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
+	ID            int       `gorm:"primaryKey"`
+	UserID        int       `gorm:"index;constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
 	User          User      `gorm:"foreignKey:UserID;references:ID"`
 	AdminID       *int      `json:"admin_id,omitempty" gorm:"index;constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
 	Title         string    `json:"title" form:"title"`

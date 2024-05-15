@@ -1,0 +1,17 @@
+mode: set
+forest/usecases/admin/admin_usecase.go:22.85,23.50 1 1
+forest/usecases/admin/admin_usecase.go:23.50,25.3 1 1
+forest/usecases/admin/admin_usecase.go:26.2,27.59 2 1
+forest/usecases/admin/admin_usecase.go:27.59,29.3 1 0
+forest/usecases/admin/admin_usecase.go:30.2,30.37 1 1
+forest/usecases/admin/admin_usecase.go:30.37,32.3 1 1
+forest/usecases/admin/admin_usecase.go:33.2,33.36 1 1
+forest/usecases/admin/admin_usecase.go:36.86,37.38 1 1
+forest/usecases/admin/admin_usecase.go:37.38,39.3 1 1
+forest/usecases/admin/admin_usecase.go:40.2,41.16 2 1
+forest/usecases/admin/admin_usecase.go:41.16,42.45 1 1
+forest/usecases/admin/admin_usecase.go:42.45,44.4 1 1
+forest/usecases/admin/admin_usecase.go:45.3,45.18 1 0
+forest/usecases/admin/admin_usecase.go:47.2,47.103 1 1
+forest/usecases/admin/admin_usecase.go:47.103,49.3 1 1
+forest/usecases/admin/admin_usecase.go:50.2,50.46 1 1

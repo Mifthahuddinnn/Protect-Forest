@@ -10,7 +10,7 @@ type User struct {
 	Email     string   `json:"email" form:"email"`
 	Password  string   `json:"password" form:"password"`
 	Address   string   `json:"address" form:"address"`
-	Points    int      `gorm:"foreignKey:UserID"`
+	Points    int      `default:"0" gorm:"default:0"`
 	Reports   []Report `gorm:"foreignKey:UserID"`
 	Redeems   []Redeem `gorm:"foreignKey:UserID"`
 	Balance   Balance  `gorm:"foreignKey:UserID"`
