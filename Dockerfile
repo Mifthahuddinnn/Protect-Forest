@@ -4,8 +4,6 @@ WORKDIR /app
 
 COPY . ./
 
-COPY .env .
-
 RUN go mod download
 
 RUN go build -o main .
@@ -15,6 +13,7 @@ FROM alpine:3.19
 WORKDIR /
 
 COPY --from=build /app/main .
+COPY --from=build /app/.env .
 
 EXPOSE 8000
 
