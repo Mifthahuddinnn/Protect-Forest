@@ -44,6 +44,6 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cd /home/ec2-user/mifthahuddin/forestcontainer:1.0
+            cd /home/ec2-user/Forest-API
             docker pull mifthahuddin/forestcontainer:1.0
             docker run -d -p 8080:8080 mifthahuddin/forestcontainer:1.0
