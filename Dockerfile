@@ -10,8 +10,10 @@ RUN go build -o main .
 
 FROM alpine:3.19
 
-WORKDIR /root
+WORKDIR /
 
 COPY --from=build /app/main .
+
+EXPOSE 8000
 
 CMD ["./main"]
