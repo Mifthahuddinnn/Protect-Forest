@@ -12,7 +12,9 @@ FROM alpine:3.19
 
 WORKDIR /
 
-COPY --from=build /app/main .
+COPY --from=build-stage /app/.env/.env .
+COPY --from=build-stage /app/main .
+
 
 EXPOSE 8000
 
