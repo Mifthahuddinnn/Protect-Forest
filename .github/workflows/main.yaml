@@ -22,7 +22,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: environment variables
-        run: echo "REGISTRY=$REGISTRY" >> .env
+        run: echo "REGISTRY=${{ secrets.ENV_PROJECT }}" >> .env
       - name: build image
         run: docker build -t mifthahuddin/forestcontainer:1.0 .
       - name: login registry
