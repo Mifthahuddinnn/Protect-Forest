@@ -12,7 +12,6 @@ FROM alpine:3.19
 
 WORKDIR /
 
-COPY --from=build /app/.env .
 COPY --from=build /app/main .
 
 
