@@ -137,18 +137,7 @@ func (u *UserUseCase) UpdateUser(user *entities.User) error {
 }
 
 func (u *UserUseCase) GetNews() (*entities.NewsResponse, error) {
-	environment := os.Getenv("ENV_PROJECT")
-	envs := strings.Split(environment, " ")
-
-	var envMap map[string]string
-	envMap = make(map[string]string)
-	for _, env := range envs {
-		keyValue := strings.Split(env, "=")
-		envMap[keyValue[0]] = keyValue[1]
-	}
-
-	apiKey := envMap["NEWS_API_KEY"]
-
+	apiKey := os.Getenv("NEWS_API_KEY")
 	resp, err := http.Get("https://newsdata.io/api/1/news?apikey=" + apiKey + "&q=hutan&country=id&language=id")
 	if err != nil {
 		return nil, err
