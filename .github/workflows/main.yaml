@@ -21,8 +21,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: environment variables
-        run: echo "REGISTRY=${{ secrets.ENV_PROJECT }}" >> .env
       - name: build image
         run: docker build -t mifthahuddin/forestcontainer:1.0 .
       - name: login registry
@@ -46,6 +44,6 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-              cd /home/ec2-user/Forest-API
-              docker pull mifthahuddin/forestcontainer:1.0
-              docker run -d -p 8000:8000 -e REGISTRY=${{ secrets.ENV_PROJECT }} mifthahuddin/forestcontainer:1.0
+            cd /home/ec2-user/Forest-API
+            docker pull mifthahuddin/forestcontainer:1.0
+            docker run -d -p 8000:8000 -e REGISTRY=${{ secrets.ENV_PROJECT }} mifthahuddin/forestcontainer:1.0
