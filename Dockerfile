@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY . ./
 
-COPY .env /app/
+COPY .env .
 
 RUN go mod download
 
