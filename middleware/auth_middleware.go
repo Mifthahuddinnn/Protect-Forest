@@ -20,18 +20,7 @@ func AuthMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 
 		tokenString := strings.SplitN(authHeader, " ", 2)[1]
 		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-			// Ambil nilai variabel lingkungan JWT_SECRET dari ENV_PROJECT
-			environment := os.Getenv("ENV_PROJECT")
-			envs := strings.Split(environment, " ")
-
-			var envMap map[string]string
-			envMap = make(map[string]string)
-			for _, env := range envs {
-				keyValue := strings.Split(env, "=")
-				envMap[keyValue[0]] = keyValue[1]
-			}
-
-			return []byte(envMap["JWT_SECRET"]), nil
+			return []byte(os.Getenv("JWT_SECRET")), nil
 		})
 		if err != nil {
 			fmt.Println("Error parsing token:", err)

@@ -5,30 +5,24 @@ import (
 	"forest/entities"
 	"log"
 	"os"
-	"strings"
 
+	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
 
 func Connect() (*gorm.DB, error) {
-	envProject := os.Getenv("ENV_PROJECT")
-	envProject = strings.ReplaceAll(envProject, "\"", "")
-	envs := strings.Split(envProject, " ")
-
-	var envMap map[string]string
-	envMap = make(map[string]string)
-	for _, env := range envs {
-		keyValue := strings.Split(env, "=")
-		envMap[keyValue[0]] = keyValue[1]
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Error loading .env file: %v", err)
 	}
 
-	dbHost := envMap["DB_HOST"]
-	dbPort := envMap["DB_PORT"]
-	dbUser := envMap["DB_USER"]
-	dbPass := envMap["DB_PASS"]
-	dbDatabase := envMap["DB_NAME"]
+	dbHost := os.Getenv("DB_HOST")
+	dbPort := os.Getenv("DB_PORT")
+	dbUser := os.Getenv("DB_USER")
+	dbPass := os.Getenv("DB_PASS")
+	dbDatabase := os.Getenv("DB_NAME")
 
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		dbUser, dbPass, dbHost, dbPort, dbDatabase)
@@ -36,10 +30,6 @@ func Connect() (*gorm.DB, error) {
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Info),
 	})
-	if err != nil {
-		log.Fatalf("Failed to connect to database: %v", err)
-		return nil, err
-	}
 
 	if err := db.AutoMigrate(&entities.User{}, &entities.Admin{}, &entities.Report{}, &entities.Redeem{}, &entities.Balance{}); err != nil {
 		log.Fatalf("Failed to auto-migrate: %v", err)
