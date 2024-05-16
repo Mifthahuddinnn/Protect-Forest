@@ -2,13 +2,8 @@ version: '1.0'
 
 services:
   forest-api-service:
-    image: mifthahuddin/ForestContainer:1.0
     container_name: forest-api-service
     ports:
-      - "8080:8080"
-    environment:
-      - PORT=8080
-    networks:
-      - forest-network
+      - "8000:8000"
     restart: on-failure
 
