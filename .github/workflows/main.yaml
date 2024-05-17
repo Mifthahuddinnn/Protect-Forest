@@ -21,6 +21,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name : Set Up Environment
+        run: |
+          echo "DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}" >> .env
+          echo "DOCKERHUB_PASSWORD=${{ secrets.DOCKERHUB_PASSWORD }}" >> .env
+          echo "SSH_HOST=${{ secrets.SSH_HOST }}" >> .env
+          echo "SSH_USER=${{ secrets.SSH_USER }}" >> .env
+          echo "SSH_KEY=${{ secrets.SSH_KEY }}" >> .env
+          echo "ENV_PROJECT=${{ secrets.ENV_PROJECT }}" >> .env
       - name: build image
         run: docker build -t mifthahuddin/forestcontainer:1.0 .
       - name: login registry
@@ -46,4 +54,4 @@ jobs:
           script: |
             cd /home/ec2-user/Forest-API
             docker pull mifthahuddin/forestcontainer:1.0
-            docker run -d -p 8000:8000 -e REGISTRY=${{ secrets.ENV_PROJECT }} mifthahuddin/forestcontainer:1.0
+            docker run -d -p 8000:8000 mifthahuddin/forestcontainer:1.0
