@@ -13,10 +13,14 @@ import (
 )
 
 func Connect() (*gorm.DB, error) {
-	// Load .env file
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatalf("Error loading .env file: %v", err)
+	if _, err := os.Stat(".env"); err == nil {
+		if err := godotenv.Load(); err != nil {
+			log.Printf("Error loading .env file: %v", err)
+		} else {
+			log.Println(".env file loaded successfully")
+		}
+	} else {
+		log.Println(".env file not found, skipping loading")
 	}
 
 	// Get environment variables
