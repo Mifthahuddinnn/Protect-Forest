@@ -24,6 +24,8 @@ jobs:
       - name : Set Up Environment
         run: |
           echo ${{ secrets.ENV_PROJECT }} > .env
+      - name: Display contents of .env file
+        run: cat .env
       - name: build image
         run: docker build -t mifthahuddin/forestcontainer:1.0 .
       - name: login registry
