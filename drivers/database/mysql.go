@@ -6,12 +6,22 @@ import (
 	"log"
 	"os"
 
+	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
 
 func Connect() (*gorm.DB, error) {
+	if _, err := os.Stat(".env"); err == nil {
+		if err := godotenv.Load(); err != nil {
+			log.Printf("Error loading .env file: %v", err)
+		} else {
+			log.Println(".env file loaded successfully")
+		}
+	} else {
+		log.Println(".env file not found, skipping loading")
+	}
 
 	// Get environment variables
 	dbHost := os.Getenv("DB_HOST")

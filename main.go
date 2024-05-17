@@ -55,6 +55,7 @@ func main() {
 	r.POST("/users/redeem/:id", userHandler.RedeemPoints)
 	r.POST("/reports", reportHandler.CreateReport)
 	r.GET("/news", userHandler.GetNews)
+	r.POST("/chat-bot", handler.HandleChatCompletion)
 
 	// admin
 	r.GET("/reports", reportHandler.GetReports)
