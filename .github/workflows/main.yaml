@@ -23,12 +23,7 @@ jobs:
         uses: actions/checkout@v2
       - name : Set Up Environment
         run: |
-          touch "DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}" >> .env
-          touch "DOCKERHUB_PASSWORD=${{ secrets.DOCKERHUB_PASSWORD }}" >> .env
-          touch "SSH_HOST=${{ secrets.SSH_HOST }}" >> .env
-          touch "SSH_USER=${{ secrets.SSH_USER }}" >> .env
-          touch "SSH_KEY=${{ secrets.SSH_KEY }}" >> .env
-
+          echo ${{ secrets.ENV_PROJECT }} > .env
       - name: build image
         run: docker build -t mifthahuddin/forestcontainer:1.0 .
       - name: login registry
