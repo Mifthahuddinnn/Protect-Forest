@@ -10,10 +10,9 @@ import (
 	"forest/usecases/admin"
 	report2 "forest/usecases/report"
 	"forest/usecases/user"
+	"github.com/labstack/echo/v4"
 	"log"
 	"os"
-
-	"github.com/labstack/echo/v4"
 )
 
 func main() {
@@ -62,6 +61,15 @@ func main() {
 	r.GET("/reports/:id", reportHandler.GetReportByID)
 	r.DELETE("/reports/:id", reportHandler.DeleteReport)
 
-	e.Logger.Fatal(e.Start(os.Getenv(":" + "PORT")))
+	//e.Logger.Fatal(e.Start(os.Getenv(":" + "PORT")))
+	port := envPortOr("8000")
 
+	e.Logger.Fatal(e.Start(port))
+}
+
+func envPortOr(port string) string {
+	if envPort := os.Getenv("PORT"); envPort != "" {
+		return ":" + envPort
+	}
+	return ":" + port
 }
