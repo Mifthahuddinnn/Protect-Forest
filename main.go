@@ -61,6 +61,6 @@ func main() {
 	r.GET("/reports/:id", reportHandler.GetReportByID)
 	r.DELETE("/reports/:id", reportHandler.DeleteReport)
 
-	e.Logger.Fatal(e.Start(":8000"))
+	e.Logger.Fatal(e.Start(":0000"))
 
 }
