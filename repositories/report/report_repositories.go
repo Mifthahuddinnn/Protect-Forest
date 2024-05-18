@@ -12,13 +12,13 @@ type Repository struct {
 
 func (repo Repository) GetReports() ([]*entities.Report, error) {
 	var reports []*entities.Report
-	result := repo.DB.Find(&reports)
+	result := repo.DB.Preload("User").Find(&reports)
 	return reports, result.Error
 }
 
 func (repo Repository) GetReportByID(id int) (*entities.Report, error) {
 	var report entities.Report
-	result := repo.DB.Where("id = ?", id).First(&report)
+	result := repo.DB.Preload("User").Where("id = ?", id).First(&report)
 	return &report, result.Error
 }
 

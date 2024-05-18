@@ -3,6 +3,7 @@ package handler
 import (
 	"forest/entities"
 	"forest/handler/base"
+	"forest/handler/response"
 	"forest/usecases/admin"
 	"forest/utils"
 	"net/http"
@@ -23,7 +24,7 @@ func (ah AdminHandler) RegisterAdmin(c echo.Context) error {
 	if err != nil {
 		return c.JSON(utils.ConvertResponseCode(err), base.NewErrResponse(err.Error()))
 	}
-	return c.JSON(http.StatusOK, base.NewSuccessResponse("Admin registered successfully", registeredAdmin))
+	return c.JSON(http.StatusOK, base.NewSuccessResponse("Admin registered successfully", response.FromAdmin(registeredAdmin)))
 }
 
 func (ah AdminHandler) LoginAdmin(c echo.Context) error {

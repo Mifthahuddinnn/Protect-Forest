@@ -57,7 +57,7 @@ func (r ReportUseCase) DeleteReport(id int) error {
 	return r.Repo.DeleteReport(id)
 }
 
-func (r *ReportUseCase) ApproveReport(reportID int, adminID int) (*entities.Report, error) {
+func (r ReportUseCase) ApproveReport(reportID int, adminID int) (*entities.Report, error) {
 	report, err := r.Repo.GetReportByID(reportID)
 	if err != nil {
 		return nil, constant.ErrorReportNotFound

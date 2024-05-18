@@ -4,6 +4,7 @@ import "forest/entities"
 
 type GetReportResponse struct {
 	ID            int
+	Username      string
 	Title         string
 	Content       string
 	Photo         string
@@ -16,6 +17,7 @@ type GetReportResponse struct {
 func FromGetReport(report *entities.Report) *GetReportResponse {
 	return &GetReportResponse{
 		ID:            report.ID,
+		Username:      report.User.Name,
 		Title:         report.Title,
 		Content:       report.Content,
 		Photo:         report.Photo,

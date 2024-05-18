@@ -133,5 +133,5 @@ func (h *ReportHandler) GetReportByID(c echo.Context) error {
 		return c.JSON(utils.ConvertResponseCode(err), base.NewErrResponse(err.Error()))
 	}
 
-	return c.JSON(http.StatusOK, base.NewSuccessResponse("Report retrieved successfully", response.FromUseCaseReport(report)))
+	return c.JSON(http.StatusOK, base.NewSuccessResponse("Report retrieved successfully", response.FromGetReport(report)))
 }

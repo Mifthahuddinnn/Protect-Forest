@@ -8,7 +8,6 @@ type UserResponse struct {
 	Email     string `json:"email"`
 	Address   string `json:"address"`
 	CreatedAt string `json:"created_at"`
-	UpdatedAt string `json:"updated_at"`
 }
 
 func FromUseCase(user *entities.User) *UserResponse {
@@ -18,6 +17,5 @@ func FromUseCase(user *entities.User) *UserResponse {
 		Email:     user.Email,
 		Address:   user.Address,
 		CreatedAt: user.CreatedAt.Format("2006-01-02 15:04:05"),
-		UpdatedAt: user.UpdatedAt.Format("2006-01-02 15:04:05"),
 	}
 }
