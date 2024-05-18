@@ -6,17 +6,19 @@ import (
 )
 
 type ReportResponse struct {
-	Title         string    `json:"title"`
-	Content       string    `json:"content"`
-	Photo         string    `json:"photo"`
-	ForestAddress string    `json:"forest"`
-	Description   string    `json:"description"`
-	Status        string    `json:"status"`
-	CreatedAt     time.Time `json:"created_at"`
+	ID            int
+	Title         string
+	Content       string
+	Photo         string
+	ForestAddress string
+	Description   string
+	Status        string
+	CreatedAt     time.Time
 }
 
 func FromUseCaseReport(report *entities.Report) *ReportResponse {
 	return &ReportResponse{
+		ID:            report.ID,
 		Title:         report.Title,
 		Content:       report.Content,
 		Photo:         report.Photo,

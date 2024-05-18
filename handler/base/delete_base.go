@@ -1,8 +1,8 @@
 package base
 
 type DeleteBase struct {
-	Message string
-	Status  bool
+	Message string `json:"message"`
+	Status  bool   `json:"status"`
 }
 
 func NewDeleteBase(message string) *DeleteBase {
