@@ -62,6 +62,6 @@ func main() {
 	r.GET("/reports/:id", reportHandler.GetReportByID)
 	r.DELETE("/reports/:id", reportHandler.DeleteReport)
 
-	e.Logger.Fatal(e.Start(os.Getenv("PORT")))
+	e.Logger.Fatal(e.Start(os.Getenv(":" + "PORT")))
 
 }
